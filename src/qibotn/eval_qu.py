@@ -60,6 +60,7 @@ def tebd_evol_state_tn_qu(qasm: str, initial_state, mps_opts, tebd_opts, backend
     tebd_obj = qtn.TEBD(initial_state, ham)
 
     amplitudes = qtn.tebd.evolve(tebd_obj, H=ham, dt=tebd_opts['dt'])
-    entropy = qtn.tebd.entropy(tebd_obj)
+    #entropy = qtn.tebd.entropy(tebd_obj)
 
-    return amplitudes, entropy
+    #return amplitudes, entropy
+    return amplitudes

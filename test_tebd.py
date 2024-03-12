@@ -1,5 +1,5 @@
 import numpy as np
-from qibo import Circuit, gates
+from qibo import Circuit, gates, models, callbacks
 import qibo
 
 computation_settings = {
