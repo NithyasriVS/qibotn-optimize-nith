@@ -14,8 +14,6 @@ class QuimbBackend(NumpyBackend):
             self.MPI_enabled = runcard.get("MPI_enabled", False)
             self.NCCL_enabled = runcard.get("NCCL_enabled", False)
             self.expectation_enabled = runcard.get("expectation_enabled", False)
-            # adding runcard setting called tebd_enabled
-            #self.tebd_enabled = runcard.get("TEBD_enabled", False)
             
             mps_enabled_value = runcard.get("MPS_enabled")
             if mps_enabled_value is True:

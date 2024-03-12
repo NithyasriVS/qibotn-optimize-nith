@@ -1,7 +1,6 @@
 import numpy as np
 import quimb.tensor as qtn
 
-
 def init_state_tn(nqubits, init_state_sv):
     """Create a matrix product state directly from a dense vector.
 
@@ -60,7 +59,47 @@ def tebd_evol_state_tn_qu(qasm: str, initial_state, mps_opts, tebd_opts, backend
     tebd_obj = qtn.TEBD(initial_state, ham)
 
     amplitudes = qtn.tebd.evolve(tebd_obj, H=ham, dt=tebd_opts['dt'])
-    #entropy = qtn.tebd.entropy(tebd_obj)
 
-    #return amplitudes, entropy
     return amplitudes
+
+def tebd_props_tn_qu(qasm: str, initial_state, mps_opts, tebd_opts, backend="numpy"):
+
+    ham = tebd_opts['H']
+    dt = tebd_opts['dt']
+
+    tebd_obj = qtn.TEBD(initial_state, ham)
+
+    entropy = []
+    zmag = []
+    schmidt_gap = []
+
+    ts = np.linspace(0, 80, 101)
+    mz_t_j = []  # z-magnetization
+    be_t_b = []  # block entropy
+    sg_t_b = []  # schmidt gap
+
+    # range of bonds, and sites
+    js = np.arange(0, 44)
+    bs = np.arange(1, 44)
+
+    for psit in tebd_obj.at_times(ts, tol=dt):
+        mz_j = []
+        be_b = []
+        sg_b = []
+        
+        # there is one more site than bond, so start with mag
+        #     this also sets the orthog center to 0
+        mz_j += [psit.magnetization(0)]
+        
+        for j in range(1, 44):
+            # after which we only need to move it from previous site
+            mz_j += [psit.magnetization(j, cur_orthog=j - 1)]
+            be_b += [psit.entropy(j, cur_orthog=j)]
+            sg_b += [psit.schmidt_gap(j, cur_orthog=j)]
+            
+        mz_t_j += [mz_j]
+        be_t_b += [be_b]
+        sg_t_b += [sg_b]
+            
+
+        return mz_t_j, be_t_b, sg_t_b
