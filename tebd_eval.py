@@ -1,6 +1,8 @@
 import numpy as np
 import quimb.tensor as qtn
 
+L = 44
+
 def init_state_tn(nqubits, init_state_sv):
     """Create a matrix product state directly from a dense vector.
 
@@ -44,27 +46,43 @@ def dense_vector_tn_qu(qasm: str, initial_state, mps_opts, backend="numpy"):
 
     return amplitudes
     
-def tebd_evol_state_tn_qu(initial_state, mps_opts, tebd_opts, backend="numpy"):
+def tebd_evol_state_tn_qu(qasm: str, initial_state, mps_opts, tebd_opts, backend="numpy"):
     
     print("entered fn in eval_qu properly")
     if initial_state is not None:
-        nqubits = int(np.log2(len(initial_state)))
-        initial_state = init_state_tn(nqubits, initial_state)
+        #nqubits = int(np.log2(len(initial_state)))
+        nqubits = 44
+        initial_state = initial_state
 
-    circ_cls = qtn.circuit.CircuitMPS if mps_opts else qtn.circuit.Circuit
+    '''circ_cls = qtn.circuit.CircuitMPS if mps_opts else qtn.circuit.Circuit
     circ_quimb_tebd = circ_cls.from_openqasm2_str(
-        qasm, psi0=initial_state, gate_opts=tebd_opts
-    )
+        qasm, psi0=initial_state, gate_opts=tebd_opts'''
+    #)
 
     ham = tebd_opts['H']
+    ham = qtn.ham_1d_heis(44)
     #tebd_obj = circ_quimb_tebd.TEBD(initial_state, ham)
     tebd_obj = qtn.TEBD(initial_state, ham)
     tebd_obj.split_opts['cutoff'] = 1e-3
-    amplitudes = qtn.TEBD.evolve(tebd_obj, H=ham, dt=tebd_opts['dt'])
+    be_t_b = []
 
-    return amplitudes
+    import numpy as np
+    ts = np.linspace(0, 80, 101)
+    
+    for psit in tebd_obj.at_times(ts, tol=1e-3):
+        be_b = []
+    
+    for j in range(1, L):
+        # after which we only need to move it from previous site
 
-def tebd_props_tn_qu(qasm: str, initial_state, mps_opts, tebd_opts, backend="numpy"):
+        be_b += [psit.entropy(j, cur_orthog=j)]
+
+    be_t_b += [be_b]
+
+
+    return be_t_b
+
+def tebd_props_tn_qu(initial_state, mps_opts, tebd_opts, backend="numpy"):
 
     ham = tebd_opts['H']
     dt = tebd_opts['dt']
