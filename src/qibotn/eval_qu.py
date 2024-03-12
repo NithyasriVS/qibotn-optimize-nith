@@ -44,3 +44,22 @@ def dense_vector_tn_qu(qasm: str, initial_state, mps_opts, backend="numpy"):
     amplitudes = interim.to_dense(backend=backend)
 
     return amplitudes
+
+def tebd_evol_state_tn_qu(qasm: str, initial_state, mps_opts, tebd_opts, backend="numpy"):
+    
+    if initial_state is not None:
+        nqubits = int(np.log2(len(initial_state)))
+        initial_state = init_state_tn(nqubits, initial_state)
+
+    circ_cls = qtn.circuit.CircuitMPS if mps_opts else qtn.circuit.Circuit
+    circ_quimb_tebd = circ_cls.from_openqasm2_str(
+        qasm, psi0=initial_state, gate_opts=tebd_opts
+    )
+
+    ham = tebd_opts['H']
+    tebd_obj = qtn.TEBD(initial_state, ham)
+
+    amplitudes = qtn.tebd.evolve(tebd_obj, H=ham, dt=tebd_opts['dt'])
+    entropy = qtn.tebd.entropy(tebd_obj)
+
+    return amplitudes, entropy
