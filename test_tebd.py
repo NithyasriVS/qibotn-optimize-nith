@@ -23,10 +23,14 @@ computation_settings = {
 qibo.set_backend(backend="qibotn", platform="qutensornet", runcard=computation_settings)
 
 
-c = Circuit(2)
+c = Circuit(5)
 # Add some gates
 c.add(gates.H(0))
 c.add(gates.H(1))
+c.add(gates.X(2))
+c.add(gates.Y(3))
+c.add(gates.H(4))
+
 
 result = c()
 

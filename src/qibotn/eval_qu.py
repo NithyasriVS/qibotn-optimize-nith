@@ -59,8 +59,7 @@ def tebd_evol_state_tn_qu(qasm: str, initial_state, mps_opts, tebd_opts, backend
     tebd_obj = circ_quimb_tebd.TEBD(initial_state, ham)
     #tebd_obj = qtn.TEBD(initial_state, ham)
     tebd_obj.split_opts['cutoff'] = 1e-3
-    #amplitudes = qtn.tebd.evolve(tebd_obj, H=ham, dt=tebd_opts['dt'])
-    amplitudes = qtn.tebd.evolve(tebd_obj, H=ham, dt=1e-24)
+    amplitudes = qtn.tebd.evolve(tebd_obj, H=ham, dt=tebd_opts['dt'])
 
     return amplitudes
 
