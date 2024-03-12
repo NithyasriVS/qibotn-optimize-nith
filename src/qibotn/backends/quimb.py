@@ -2,6 +2,8 @@ from qibo.backends.numpy import NumpyBackend
 from qibo.config import raise_error
 from qibo.result import QuantumState
 
+import quimb.tensor as qtn
+
 
 class QuimbBackend(NumpyBackend):
 
@@ -23,6 +25,16 @@ class QuimbBackend(NumpyBackend):
                 self.mps_opts = mps_enabled_value
             else:
                 raise TypeError("MPS_enabled has an unexpected type")
+            
+            tebd_enabled_value = runcard.get("TEBD_enabled")
+            if tebd_enabled_value is True:
+                self.tebd_opts = {"H": qtn.ham_1d_heis(44), "dt": 1e-3} # 10^-3
+            elif tebd_enabled_value == False:
+                self.tebd_opts = None
+            elif isinstance(tebd_enabled_value, dict):
+                self.tebd_opts = tebd_enabled_value
+            else:
+                raise TypeError("TEBD_enabled has an unexpected type")
 
         else:
             self.MPI_enabled = False
@@ -30,6 +42,7 @@ class QuimbBackend(NumpyBackend):
             self.NCCL_enabled = False
             self.expectation_enabled = False
             self.mps_opts = None
+            self.tebd_opts = None
 
         self.name = "qibotn"
         self.quimb = quimb
@@ -75,10 +88,16 @@ class QuimbBackend(NumpyBackend):
             raise_error(
                 NotImplementedError, "QiboTN quimb backend cannot support expectation"
             )
-
-        state = eval.dense_vector_tn_qu(
-            circuit.to_qasm(), initial_state, self.mps_opts, backend="numpy"
-        )
+        
+        if self.MPS_enabled == True and self.TEBD_enabled == True:
+                print("quimb.py yes")
+                state = eval.tebd_evol_state_tn_qu(
+                circuit.to_qasm(), initial_state, self.mps_opts, self.tebd_opts, backend="numpy"
+                )
+        elif self.MPS_enabled == True:
+                state = eval.dense_vector_tn_qu(
+                circuit.to_qasm(), initial_state, self.mps_opts, backend="numpy"
+                )
 
         if return_array:
             return state.flatten()
