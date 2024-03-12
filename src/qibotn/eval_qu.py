@@ -44,7 +44,7 @@ def dense_vector_tn_qu(qasm: str, initial_state, mps_opts, backend="numpy"):
     amplitudes = interim.to_dense(backend=backend)
 
     return amplitudes
-
+    
 def tebd_evol_state_tn_qu(qasm: str, initial_state, mps_opts, tebd_opts, backend="numpy"):
     
     if initial_state is not None:

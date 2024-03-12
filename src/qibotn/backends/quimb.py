@@ -41,7 +41,7 @@ class QuimbBackend(NumpyBackend):
             self.MPI_enabled = False
             self.MPS_enabled = False
             self.NCCL_enabled = False
-            self.tebd_enabled = False
+            self.TEBD_enabled = False
             self.expectation_enabled = False
             self.mps_opts = None
 
@@ -89,12 +89,11 @@ class QuimbBackend(NumpyBackend):
             raise_error(
                 NotImplementedError, "QiboTN quimb backend cannot support expectation"
             )
-        if self.MPS_enabled == True:
-            if self.tebd_enabled == True:
+        if self.MPS_enabled == True and self.TEBD_enabled == True:
                 state = eval.tebd_evol_state_tn_qu(
                 circuit.to_qasm(), initial_state, self.mps_opts, self.tebd_opts, backend="numpy"
                 )
-            else:
+        elif self.MPS_enabled == True:
                 state = eval.dense_vector_tn_qu(
                 circuit.to_qasm(), initial_state, self.mps_opts, backend="numpy"
                 )
