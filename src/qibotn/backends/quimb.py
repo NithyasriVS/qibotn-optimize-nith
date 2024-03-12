@@ -90,6 +90,7 @@ class QuimbBackend(NumpyBackend):
                 NotImplementedError, "QiboTN quimb backend cannot support expectation"
             )
         if self.MPS_enabled == True and self.TEBD_enabled == True:
+                print("quimb.py yes")
                 state = eval.tebd_evol_state_tn_qu(
                 circuit.to_qasm(), initial_state, self.mps_opts, self.tebd_opts, backend="numpy"
                 )

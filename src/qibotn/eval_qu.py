@@ -46,6 +46,7 @@ def dense_vector_tn_qu(qasm: str, initial_state, mps_opts, backend="numpy"):
     
 def tebd_evol_state_tn_qu(qasm: str, initial_state, mps_opts, tebd_opts, backend="numpy"):
     
+    print("entered fn in eval_qu properly")
     if initial_state is not None:
         nqubits = int(np.log2(len(initial_state)))
         initial_state = init_state_tn(nqubits, initial_state)
