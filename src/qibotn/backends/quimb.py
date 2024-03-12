@@ -2,6 +2,10 @@ from qibo.backends.numpy import NumpyBackend
 from qibo.config import raise_error
 from qibo.result import QuantumState
 
+from qibotn.circuit_convertor import QiboCircuitToEinsum
+from qibotn.circuit_to_mps import QiboCircuitToMPS
+from mps_con_help_quimb import MPSContractionHelper_Quimb
+
 
 class QuimbBackend(NumpyBackend):
 
