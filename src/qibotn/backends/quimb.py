@@ -28,7 +28,7 @@ class QuimbBackend(NumpyBackend):
             
             tebd_enabled_value = runcard.get("TEBD_enabled")
             if tebd_enabled_value is True:
-                self.tebd_opts = {"H": qtn.ham_1d_heis(44), "dt": 1e-3} # 10^-3
+                self.tebd_opts = {"H": qtn.ham_1d_heis(20), "dt": 1e-3} # 10^-3
             elif tebd_enabled_value == False:
                 self.tebd_opts = None
             elif isinstance(tebd_enabled_value, dict):
@@ -88,7 +88,7 @@ class QuimbBackend(NumpyBackend):
             raise_error(
                 NotImplementedError, "QiboTN quimb backend cannot support expectation"
             )
-        
+        state = None
         if self.MPS_enabled == True and self.TEBD_enabled == True:
                 print("quimb.py yes")
                 state = eval.tebd_evol_state_tn_qu(
@@ -101,5 +101,7 @@ class QuimbBackend(NumpyBackend):
 
         if return_array:
             return state.flatten()
+            #return state
         else:
             return QuantumState(state.flatten())
+            #return state
