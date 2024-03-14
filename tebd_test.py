@@ -1,68 +1,45 @@
-import numpy as np
-from qibo import Circuit, gates
-import qibo
+def main():
 
-import quimb
-import quimb.tensor as qtn
+    import numpy as np
+    from qibo import Circuit, gates, models
+    import qibo
 
-#import qibotn_dependency as qd
-from qibotn import eval_qu as evqu
+    import quimb
+    import quimb.tensor as qtn
 
-computation_settings = {
-    "MPI_enabled": False,
-    "MPS_enabled": {
-        "qr_method": False,
-        "svd_method": {
-            "partition": "UV",
-            "abs_cutoff": 1e-12,
+    #import qibotn_dependency as qd
+    from qibotn import eval_qu as evqu
+
+    computation_settings = {
+        "MPI_enabled": False,
+        "MPS_enabled": {
+            "qr_method": False,
+            "svd_method": {
+                "partition": "UV",
+                "abs_cutoff": 1e-12,
+            },
         },
-    },
-    "TEBD_enabled": {
-        "H": qtn.ham_1d_heis(44),
-        "dt": 1e-3
-    },
-    "NCCL_enabled": False,
-    "expectation_enabled": False,
-}
-import qibo
-from qibo import gates, models
+        "TEBD_enabled": {
+            "H": qtn.ham_1d_heis(20),
+            "dt": 1e-3
+        },
+        "NCCL_enabled": False,
+        "expectation_enabled": False,
+    }
 
-'''circuit = models.Circuit(44)
+    qibo.set_backend(backend="qibotn", platform="qutensornet", runcard=computation_settings)
 
-# Apply X gates to flip the qubits in the 14th and 29th positions
-circuit.add(gates.X(14))
-circuit.add(gates.X(29))
+    circuit = models.Circuit(20)
 
-result = circuit()
+    # Apply X gates to flip the qubits in the 15th and 29th positions
+    circuit.add(gates.X(8))
+    circuit.add(gates.X(18))
 
-state = result.state()'''
+    result = circuit()
 
-qibo.set_backend(backend="qibotn", platform="qutensornet", runcard=computation_settings)
-
-circuit = models.Circuit(20)
-
-# Apply X gates to flip the qubits in the 15th and 29th positions
-circuit.add(gates.X(8))
-circuit.add(gates.X(18))
+    print(result.state())
 
 
-#c = Circuit(2)
-
-#c.add(gates.H(0))
-#c.add(gates.H(1))
-
-
-
-result = circuit()
-
-print(result.state())
-
-
-'''print(evqu.tebd_evol_state_tn_qu(
-    initial_state,
-    initial_state,
-    {"qr_method": False, "svd_method": {"partition": "UV", "abs_cutoff": 1e-12}}, 
-    { "H": "<LocalHam1D(L=44, cyclic=False)>", "dt": 1e-3} ))'''
-
-
+if __name__ == "__main__":
+    main()
 

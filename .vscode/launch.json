@@ -8,7 +8,7 @@
             "name": "Python Debugger: Current File",
             "type": "debugpy",
             "request": "launch",
-            "program": "${path}",
+            "program": "C:\\Users\\nithy\\.conda\\envs\\nithyasri\\lib\\site-packages\\qibotn\\eval_qu.py",
             "console": "integratedTerminal"
         }
     ]
