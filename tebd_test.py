@@ -20,7 +20,7 @@ def main():
             },
         },
         "TEBD_enabled": {
-            "H": qtn.ham_1d_heis(20),
+            "H": qtn.ham_1d_heis(44),
             "dt": 1e-3
         },
         "NCCL_enabled": False,
@@ -29,11 +29,10 @@ def main():
 
     qibo.set_backend(backend="qibotn", platform="qutensornet", runcard=computation_settings)
 
-    circuit = models.Circuit(20)
+    circuit = models.Circuit(44)
 
-    # Apply X gates to flip the qubits in the 15th and 29th positions
-    circuit.add(gates.X(8))
-    circuit.add(gates.X(18))
+    circuit.add(gates.X(14))
+    circuit.add(gates.X(29))
 
     result = circuit()
 
