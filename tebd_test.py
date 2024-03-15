@@ -35,7 +35,6 @@ def main():
     circuit.add(gates.X(29))
 
     result = circuit()
-
     print(result.state())
 
 
