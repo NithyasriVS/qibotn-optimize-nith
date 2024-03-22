@@ -17,6 +17,12 @@ def init_state_tn(nqubits, init_state_sv):
 
     return qtn.tensor_1d.MatrixProductState.from_dense(init_state_sv, dims)
 
+def extract_hamiltonian_from_circuit(circuit):
+
+    
+
+    return hamiltonian
+
 
 def dense_vector_tn_qu(qasm: str, initial_state, mps_opts, backend="numpy"):
     """Evaluate circuit in QASM format with Quimb.
@@ -45,34 +51,93 @@ def dense_vector_tn_qu(qasm: str, initial_state, mps_opts, backend="numpy"):
 
     return amplitudes
 
-def tebd_evol_state_tn_qu(qasm: str, initial_state, mps_opts, tebd_opts, backend="numpy"):
-    
-    print("[DEBUGGING STATEMENT] Let's find the TEBD entropy")
+def tebd_entropy_tn_qu(qasm: str, initial_state, mps_opts, tebd_opts, backend="numpy"):
 
-    '''if initial_state is not None:
+    if initial_state is not None:
         nqubits = int(np.log2(len(initial_state)))
-        initial_state = init_state_tn(nqubits, initial_state)'''
+        initial_state = init_state_tn(nqubits, initial_state)
 
     circ_cls = qtn.circuit.CircuitMPS if mps_opts else qtn.circuit.Circuit
     circ_quimb = circ_cls.from_openqasm2_str(
         qasm, psi0=initial_state, gate_opts=mps_opts
     )
-    H = tebd_opts['H']
+    
+    H = extract_hamiltonian_from_crt(circ_quimb)
     tebd = qtn.TEBD(circ_quimb, H)
     
-    ts = np.linspace(0, 80, 101)
+    ts = np.arange(start, stop)
     
     for psit in tebd.at_times(ts, tol=1e-3):
     
         be_b = []
     
-        for j in range(1, 44):
+        for j in range(1, nqubits):
 
             be_b += [psit.entropy(j, cur_orthog=j)]
         
         be_t_b += [be_b]
         
     return be_t_b
+
+def tebd_zmag_tn_qu(qasm: str, initial_state, mps_opts, tebd_opts, backend="numpy"):
+
+    if initial_state is not None:
+        nqubits = int(np.log2(len(initial_state)))
+        initial_state = init_state_tn(nqubits, initial_state)
+
+    circ_cls = qtn.circuit.CircuitMPS if mps_opts else qtn.circuit.Circuit
+    circ_quimb = circ_cls.from_openqasm2_str(
+        qasm, psi0=initial_state, gate_opts=mps_opts
+    )
+
+    H = extract_hamiltonian_from_crt(circ_quimb)
+    tebd = qtn.TEBD(circ_quimb, H)
+    
+    ts = np.arange(start, stop)
+    
+    for psit in tebd.at_times(ts, tol=1e-3):
+    
+        mz_j = []
+    
+        # there is one more site than bond, so start with mag
+        #     this also sets the orthog center to 0
+        mz_j += [psit.magnetization(0)]
+
+        for j in range(1, nqubits):
+        # after which we only need to move it from previous site
+            mz_j += [psit.magnetization(j, cur_orthog=j - 1)]
+        
+    mz_t_j += [mz_j]
+        
+    return mz_t_j
+
+def tebd_schmidt_gap__tn_qu(qasm: str, initial_state, mps_opts, tebd_opts, backend="numpy"):
+
+    if initial_state is not None:
+        nqubits = int(np.log2(len(initial_state)))
+        initial_state = init_state_tn(nqubits, initial_state)
+
+    circ_cls = qtn.circuit.CircuitMPS if mps_opts else qtn.circuit.Circuit
+    circ_quimb = circ_cls.from_openqasm2_str(
+        qasm, psi0=initial_state, gate_opts=mps_opts
+    )
+    H = extract_hamiltonian_from_crt(circ_quimb)
+    tebd = qtn.TEBD(initial_state, H)
+    
+    ts = np.arange(start, stop)
+    
+    for psit in tebd.at_times(ts, tol=1e-3):
+    
+        sg_b = []
+    
+        for j in range(1, nqubits):
+
+            sg_b += [psit.schmidt_gap(j, cur_orthog=j)]
+        
+        sg_t_b += [sg_b]
+        
+    return sg_t_b
+
 
 
 

@@ -11,6 +11,11 @@ class QuimbBackend(NumpyBackend):
         super().__init__()
         import quimb  # pylint: disable=import-error
 
+        global tebd_opts
+        global mps_opts
+        global tebd_enabled_value
+        global mps_enabled_value
+
         if runcard is not None:
             self.MPI_enabled = runcard.get("MPI_enabled", False)
             self.NCCL_enabled = runcard.get("NCCL_enabled", False)
@@ -28,7 +33,7 @@ class QuimbBackend(NumpyBackend):
             
             tebd_enabled_value = runcard.get("TEBD_enabled")
             if tebd_enabled_value is True:
-                self.tebd_opts = {"H": qtn.ham_1d_heis(20), "dt": 1e-3} # 10^-3
+                self.tebd_opts = {"dt": 1e-3, "start": 0, "stop": 1.001, "opts": "entropy"}
             elif tebd_enabled_value == False:
                 self.tebd_opts = None
             elif isinstance(tebd_enabled_value, dict):
@@ -105,3 +110,50 @@ class QuimbBackend(NumpyBackend):
         else:
             return QuantumState(state.flatten())
             #return state
+        
+    def evaluate_hamiltonian(
+        self, circuit, initial_state=None, nshots=None, return_array=False
+        ):
+
+        import qibotn.eval_qu as eval
+
+        if self.MPI_enabled == True:
+            raise_error(NotImplementedError, "QiboTN quimb backend cannot support MPI.")
+        if self.NCCL_enabled == True:
+            raise_error(
+                NotImplementedError, "QiboTN quimb backend cannot support NCCL."
+            )
+        if self.expectation_enabled == True:
+            raise_error(
+                NotImplementedError, "QiboTN quimb backend cannot support expectation"
+            )
+        state = None
+        
+        if self.MPS_enabled == True and self.TEBD_enabled == True:
+                
+                option = tebd_opts["opts"]
+
+
+                if option == "entropy":
+                    state = eval.tebd_entropy_tn_qu(
+                    circuit.to_qasm(), initial_state, self.mps_opts, self.tebd_opts, backend="numpy"
+                    )
+                elif option == "zmag":
+                    state = eval.tebd_zmag_tn_qu(
+                    circuit.to_qasm(), initial_state, self.mps_opts, self.tebd_opts, backend="numpy"
+                    )
+                elif option == "schmidtgap":
+                    state = eval.tebd_schmidt_gap_tn_qu(
+                    circuit.to_qasm(), initial_state, self.mps_opts, self.tebd_opts, backend="numpy"
+                    )
+        
+        if return_array:
+            return state.flatten()
+            #return state
+        else:
+            return QuantumState(state.flatten())
+            #return state
+            
+        
+
+
