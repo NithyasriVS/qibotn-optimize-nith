@@ -44,3 +44,82 @@ def dense_vector_tn_qu(qasm: str, initial_state, mps_opts, backend="numpy"):
     amplitudes = interim.to_dense(backend=backend)
 
     return amplitudes
+
+def tebd_entropy(circuit, initial_state, tebd_opts, backend="numpy"):
+
+    if initial_state is not None:
+        nqubits = int(np.log2(len(initial_state)))
+        initial_state = init_state_tn(nqubits, initial_state)
+
+    ham = circuit.hamiltonian
+    numqubits = circuit.nqubits
+    tebd = qtn.TEBD(initial_state, ham)
+
+    start = tebd_opts["start"]
+    stop = tebd_opts["stop"]
+    dt = tebd_opts["dt"]
+    
+    ts = np.arange(start, stop, dt)
+    for psit in tebd.at_times(ts, tol=1e-3):
+    
+        be_b = []
+        for j in range(1, numqubits):
+
+            be_b += [psit.entropy(j, cur_orthog=j)]
+        
+        be_t_b += [be_b]
+        
+    return be_t_b
+
+def tebd_zmag(circuit, initial_state, tebd_opts, backend="numpy"):
+
+    if initial_state is not None:
+        nqubits = int(np.log2(len(initial_state)))
+        initial_state = init_state_tn(nqubits, initial_state)
+
+    ham = circuit.hamiltonian
+    numqubits = circuit.nqubits
+    tebd = qtn.TEBD(initial_state, ham)
+
+    start = tebd_opts["start"]
+    stop = tebd_opts["stop"]
+    dt = tebd_opts["dt"]
+    
+    ts = np.arange(start, stop, dt)
+    for psit in tebd.at_times(ts, tol=1e-3):
+        
+        mz_j = []
+        mz_j += [psit.magnetization(0)]
+    
+        for j in range(1, numqubits):
+            mz_j += [psit.magnetization(j, cur_orthog=j - 1)]
+        
+        mz_t_j += [mz_j]
+    
+    return mz_t_j
+        
+def tebd_sgap(circuit, initial_state, tebd_opts, backend="numpy"):
+
+    if initial_state is not None:
+        nqubits = int(np.log2(len(initial_state)))
+        initial_state = init_state_tn(nqubits, initial_state)
+
+    ham = circuit.hamiltonian
+    numqubits = circuit.nqubits
+    tebd = qtn.TEBD(initial_state, ham)
+
+    start = tebd_opts["start"]
+    stop = tebd_opts["stop"]
+    dt = tebd_opts["dt"]
+    
+    ts = np.arange(start, stop, dt)
+    for psit in tebd.at_times(ts, tol=1e-3):
+    
+        sg_b = []
+        for j in range(1, numqubits):
+
+            sg_b += [psit.schmidt_gap(j, cur_orthog=j)]
+        
+        sg_t_b += [sg_b]
+        
+    return sg_t_b

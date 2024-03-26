@@ -9,6 +9,11 @@ class QuimbBackend(NumpyBackend):
         super().__init__()
         import quimb  # pylint: disable=import-error
 
+        global tebd_enabled_value
+        global mps_enabled_value
+        global tebd_opts
+        global mps_opts
+
         if runcard is not None:
             self.MPI_enabled = runcard.get("MPI_enabled", False)
             self.NCCL_enabled = runcard.get("NCCL_enabled", False)
@@ -23,6 +28,16 @@ class QuimbBackend(NumpyBackend):
                 self.mps_opts = mps_enabled_value
             else:
                 raise TypeError("MPS_enabled has an unexpected type")
+            
+            tebd_enabled_value = runcard.get("TEBD_enabled")
+            if tebd_enabled_value is True:
+                self.tebd_opts = {"dt": 1e-3, "start": 0, "stop": 1.001, "opt": "entropy"}
+            elif tebd_enabled_value == False:
+                self.tebd_opts = None
+            elif isinstance(tebd_enabled_value, dict):
+                self.tebd_opts = tebd_enabled_value
+            else:
+                raise TypeError("TEBD_enabled has an unexpected type")
 
         else:
             self.MPI_enabled = False
@@ -84,3 +99,38 @@ class QuimbBackend(NumpyBackend):
             return state.flatten()
         else:
             return QuantumState(state.flatten())
+    
+    def execute_evolution(
+            self, circuit, initial_state=None, nshots=None
+    ):
+    
+        import qibotn.eval_qu as eval
+
+        if self.MPI_enabled == True:
+            raise_error(NotImplementedError, "QiboTN quimb backend cannot support MPI.")
+        if self.NCCL_enabled == True:
+            raise_error(
+                NotImplementedError, "QiboTN quimb backend cannot support NCCL."
+            )
+        if self.expectation_enabled == True:
+            raise_error(
+                NotImplementedError, "QiboTN quimb backend cannot support expectation"
+            )
+        
+        opt = tebd_enabled_value["opt"]
+        
+        if opt == "entropy":
+            entropy = eval.tebd_entropy(
+                circuit, initial_state, self.tebd_opts, backend="numpy"
+                )
+            return entropy
+        if opt == "zmag":
+            zmag = eval.tebd_zmag(
+                circuit, initial_state, self.tebd_opts, backend="numpy"
+            )
+            return zmag
+        if opt == "sgap":    
+            sgap = eval.tebd_sgap(
+                circuit, initial_state, self.tebd_opts, backend="numpy"
+            )
+            return sgap
