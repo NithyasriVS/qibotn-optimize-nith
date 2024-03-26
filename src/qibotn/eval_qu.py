@@ -47,9 +47,13 @@ def dense_vector_tn_qu(qasm: str, initial_state, mps_opts, backend="numpy"):
 
 def tebd_entropy(circuit, initial_state, tebd_opts, backend="numpy"):
 
+    print("ENTERED TEBD_ENTOPY FUNCTION")
     if initial_state is not None:
         nqubits = int(np.log2(len(initial_state)))
         initial_state = init_state_tn(nqubits, initial_state)
+
+    
+    initial_state = np.ones(nqubits, dtype=int)
 
     ham = circuit.hamiltonian
     numqubits = circuit.nqubits
@@ -76,6 +80,9 @@ def tebd_zmag(circuit, initial_state, tebd_opts, backend="numpy"):
     if initial_state is not None:
         nqubits = int(np.log2(len(initial_state)))
         initial_state = init_state_tn(nqubits, initial_state)
+    
+    
+    initial_state = np.ones(nqubits, dtype=int)
 
     ham = circuit.hamiltonian
     numqubits = circuit.nqubits
@@ -103,6 +110,9 @@ def tebd_sgap(circuit, initial_state, tebd_opts, backend="numpy"):
     if initial_state is not None:
         nqubits = int(np.log2(len(initial_state)))
         initial_state = init_state_tn(nqubits, initial_state)
+
+    
+    initial_state = np.ones(nqubits, dtype=int)
 
     ham = circuit.hamiltonian
     numqubits = circuit.nqubits
