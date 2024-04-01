@@ -90,18 +90,22 @@ class QuimbBackend(NumpyBackend):
             raise_error(
                 NotImplementedError, "QiboTN quimb backend cannot support expectation"
             )
+        if tebd_enabled_value == True:
+            entropy = eval.tebd_entropy(
+                circuit, initial_state, self.tebd_opts, backend="numpy"
+                )
+            return entropy
         if mps_enabled_value == True and tebd_enabled_value == False:
             state = eval.dense_vector_tn_qu(
                 circuit.to_qasm(), initial_state, self.mps_opts, backend="numpy"
             )
-
-        if return_array:
-            #return state.flatten()
-            return state
-        else:
-            #return QuantumState(state.flatten())
+            if return_array:
+                #return state.flatten()
+                return state
+            else:
+                #return QuantumState(state.flatten())
     
-    def execute_evolution(
+                '''def execute_evolution(
             self, circuit, initial_state=None, nshots=None
     ):
     
@@ -135,4 +139,4 @@ class QuimbBackend(NumpyBackend):
                 sgap = eval.tebd_sgap(
                     circuit, initial_state, self.tebd_opts, backend="numpy"
                 )
-                return sgap
+                return sgap'''
