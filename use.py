@@ -24,9 +24,13 @@ c = ham.circuit(dt=1e-3)
 
 c.add(gates.CallbackGate(entropy))
 
-
-final_state = c()
-print(entropy[:])
+evolve = models.StateEvolution(ham, dt=1e-3)
+print(evolve)
+nqubits = 5
+initial_state = np.ones(2 ** nqubits) / np.sqrt(2 ** nqubits)
+evolve = models.StateEvolution(ham, dt=1e-3, callbacks=[entropy])
+print(evolve.callbacks[0].spectrum)
+final_state = evolve(final_time=1, start_time=0, initial_state=initial_state)
 
 print(entropy.spectrum)
 

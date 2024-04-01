@@ -57,6 +57,8 @@ def tebd_entropy(circuit, initial_state, tebd_opts, backend="numpy"):
     numqubits = circuit.nqubits
     tebd = qtn.TEBD(initial_state, ham)
 
+    import numpy as np
+
     initial_state = np.zeros(2 ** numqubits) / np.sqrt(2 ** numqubits)
 
     start = tebd_opts["start"]
