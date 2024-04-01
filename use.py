@@ -17,21 +17,20 @@ computation_settings = {
 
 qibo.set_backend(backend="qibotn", platform="qutensornet", runcard=computation_settings)
 
-nqubits = 5
-dt = 1e-3
-initial_state = np.ones(2 ** nqubits) / np.sqrt(2 ** nqubits)
+entropy = callbacks.EntanglementEntropy([0], compute_spectrum=True)
 
-#observable = callbacks.EntanglementEntropy([0], compute_spectrum=True)
+ham = hamiltonians.TFIM(nqubits=5, dense=False)
+c = ham.circuit(dt=1e-3)
 
-observable = callbacks.EntanglementEntropy([0], compute_spectrum=True)
+c.add(gates.CallbackGate(entropy))
 
-ham = hamiltonians.TFIM(nqubits=nqubits, dense=False)
-circuit = ham.circuit(dt=dt)
-#circuit.add(gates.CallbackGate(observable))
 
-evolve = models.StateEvolution(ham, dt=1e-3, callbacks=[observable])
-final_state = evolve(final_time=1, initial_state=initial_state)
+final_state = c()
+print(entropy[:])
 
-print(observable[:])
-print(observable.spectrum)
+print(entropy.spectrum)
+
+
+
+
 

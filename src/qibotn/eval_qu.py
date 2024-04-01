@@ -51,15 +51,13 @@ def tebd_entropy(circuit, initial_state, tebd_opts, backend="numpy"):
     if initial_state is not None:
         nqubits = int(np.log2(len(initial_state)))
         initial_state = init_state_tn(nqubits, initial_state)
-
-    
     
 
     ham = circuit.hamiltonian
     numqubits = circuit.nqubits
     tebd = qtn.TEBD(initial_state, ham)
 
-    initial_state = np.ones(2 ** numqubits) / np.sqrt(2 ** numqubits)
+    initial_state = np.zeros(2 ** numqubits) / np.sqrt(2 ** numqubits)
 
     start = tebd_opts["start"]
     stop = tebd_opts["stop"]
