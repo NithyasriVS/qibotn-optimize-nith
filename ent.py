@@ -15,5 +15,3 @@ evolve = models.StateEvolution(ham, dt=1e-3)
 final_state = evolve(final_time=1, initial_state=initial_state)
 
 print(entropy[:])
-
-print(entropy.spectrum)
