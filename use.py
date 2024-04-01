@@ -17,8 +17,6 @@ computation_settings = {
 
 qibo.set_backend(backend="qibotn", platform="qutensornet", runcard=computation_settings)
 
-entropy = callbacks.EntanglementEntropy([0], compute_spectrum=True)
-
 nqubits = 5
 dt = 1e-3
 

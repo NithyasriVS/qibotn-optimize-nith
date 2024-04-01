@@ -47,13 +47,15 @@ def dense_vector_tn_qu(qasm: str, initial_state, mps_opts, backend="numpy"):
 
 def tebd_entropy(circuit, initial_state, tebd_opts, backend="numpy"):
 
-    print("ENTERED TEBD_ENTOPY FUNCTION")
+    print("ENTERED TEBD_ENTROPY FUNCTION")
     if initial_state is not None:
         nqubits = int(np.log2(len(initial_state)))
         initial_state = init_state_tn(nqubits, initial_state)
     
+    from qibo import hamiltonians
+    ham = hamiltonians.TFIM(nqubits=nqubits, dense=False)
 
-    ham = circuit.hamiltonian
+    
     numqubits = circuit.nqubits
     tebd = qtn.TEBD(initial_state, ham)
 
