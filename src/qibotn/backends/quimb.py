@@ -1,6 +1,7 @@
 from qibo.backends.numpy import NumpyBackend
 from qibo.config import raise_error
 from qibo.result import QuantumState
+import tebd as tbd
 
 
 class QuimbBackend(NumpyBackend):
@@ -86,6 +87,11 @@ class QuimbBackend(NumpyBackend):
             )
         if self.tebd_enabled == True:
             print("Add code for TEBD function invocation here")
+            #local_unitary = tbd.handle_unitary(circuit) # pseudocode
+            #tbd.do_tebd(local_unitary) # pseudocode
+            
+            # in eval_qu: a fn that will do tebd and store values of dense vector at diff times
+            # in a log file and finally only return the evolved dense vector using .to_dense/
         
         state = eval.dense_vector_tn_qu(
             circuit.to_qasm(), initial_state, self.mps_opts, backend="numpy"
