@@ -38,6 +38,7 @@ class QuimbBackend(NumpyBackend):
             self.NCCL_enabled = False
             self.expectation_enabled = False
             self.mps_opts = None
+            self.tebd_opts = None
 
         self.name = "qibotn"
         self.quimb = quimb
