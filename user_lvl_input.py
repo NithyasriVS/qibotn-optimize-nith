@@ -1,5 +1,5 @@
 import numpy as np
-from qibo import Circuit, gates
+from qibo import Circuit, gates, hamiltonians
 import qibo
 
 # Below shows how to set the computation_settings
@@ -7,24 +7,26 @@ import qibo
 # If computation_settings is not specified, the default setting is used in which all booleans will be False.
 # This will trigger the dense vector computation of the tensornet.
 
+dt = 1e-2
+nqubits = 5
+
 computation_settings = {
     "MPI_enabled": False,
     "MPS_enabled": False,
     "NCCL_enabled": False,
-    "expectation_enabled": False
+    "expectation_enabled": False,
+    "TEBD_enabled" : {"dt":dt}
 }
 
 
-qibo.set_backend(backend="qibotn", platform="qutensornet", runcard=computation_settings) #quimb
+qibo.set_backend(backend="qibotn", platform="qutensornet", runcard=computation_settings)
 
 
 # Construct the circuit
-c = Circuit(2)
-# Add some gates
-c.add(gates.H(0))
-c.add(gates.H(1))
+ham = hamiltonians.XXZ(nqubits=nqubits)
+circuit = ham.circuit(dt=dt)
 
 # Execute the circuit and obtain the final state
-result = c()
+result = circuit()
 
 print(result.state())

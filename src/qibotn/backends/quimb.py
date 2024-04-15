@@ -23,6 +23,14 @@ class QuimbBackend(NumpyBackend):
                 self.mps_opts = mps_enabled_value
             else:
                 raise TypeError("MPS_enabled has an unexpected type")
+            
+            tebd_enabled_value = runcard.get("TEBD_enabled")
+            if tebd_enabled_value is True:
+                self.tebd_opts = {"dt":1e-2}
+            elif tebd_enabled_value is False:
+                self.tebd_opts = None
+            elif isinstance(tebd_enabled_value, dict):
+                self.tebd_opts = mps_enabled_value
 
         else:
             self.MPI_enabled = False
@@ -75,7 +83,9 @@ class QuimbBackend(NumpyBackend):
             raise_error(
                 NotImplementedError, "QiboTN quimb backend cannot support expectation"
             )
-
+        if self.tebd_enabled == True:
+            print("Add code for TEBD function invocation here")
+        
         state = eval.dense_vector_tn_qu(
             circuit.to_qasm(), initial_state, self.mps_opts, backend="numpy"
         )
