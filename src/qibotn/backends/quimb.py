@@ -111,8 +111,7 @@ class QuimbBackend(NumpyBackend):
                 NotImplementedError, "QiboTN does not support custom hamiltonians"
            )
 
-            
-            # Extraction of terms
+            # Extraction of terms using symbolic representation qibo
 
             terms_list = []
             list_of_terms = ham.terms
