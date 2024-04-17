@@ -17,7 +17,6 @@ hj = "what exactly - a processed ver of the unitaries"
 dt = 1e-2 # in actual get this from the tebd_opts
 #u = np.exp(1j * dt * hj) # get this from the circuit so circiut must be passed in as a fn paramter
 
-example_logging = "[EXAMPLE]"
 logging.basicConfig(filename="tebd.log",
                     format='%(asctime)s %(message)s',
                     filemode='w')
@@ -46,4 +45,13 @@ logger.info("Just an information")
 
 # apply U repeatedly as per time interval
 # final mps after evol
+
+# interesting point and potential challenge here:
+''' 
+how are we gonna reconstruct this as a quimb CircuitMPS object so that .to_dense can be used to
+get the dense vector?
+
+and at different dts until total time, I wanna log these dense vector values and only return the
+dense vector value of the final mps - DOES THIS EVEN MAKE SENSE AND IS IT DOABLE?
+'''
 # dense vector of final mps

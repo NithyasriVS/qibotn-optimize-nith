@@ -91,6 +91,7 @@ class QuimbBackend(NumpyBackend):
             from qibo.hamiltonians import SymbolicHamiltonian
 
             ham = self.tebd_opts["hamiltonian"]
+            dt = self.tebd_opts["dt"]
             nqubits = circuit.nqubits
 
             if ham == "TFIM":
@@ -119,11 +120,12 @@ class QuimbBackend(NumpyBackend):
             print("Add code for TEBD function invocation here")
             #[NOT RELEVANT FOR ABOVE APPROACH] local_unitary = tbd.handle_unitary(circuit) # pseudocode
             
-            #state = call some fn which must be written in eval_qu to do 
-            # tbd.do_tebd(terms_list) something like this within eval_qu
+            '''#state = call some fn which must be written in eval_qu to do 
+            # tbd.do_tebd(terms_list, dt) something like this within eval_qu because I'll need these 2 params in tebd.py or just send
+            # the terms_list and self.tebd_opts - anything else required must see as we progress
             
             # in eval_qu: a fn that will do tebd and store values of dense vector at diff times
-            # in a log file and finally only return the evolved dense vector using .to_dense
+            # in a log file and finally only return the evolved dense vector using .to_dense'''
         
         state = eval.dense_vector_tn_qu(
             circuit.to_qasm(), initial_state, self.mps_opts, backend="numpy"

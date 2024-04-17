@@ -19,7 +19,7 @@ computation_settings = {
 }
 
 # Possible list of hamiltonians
-# TFIM: transverse field ising mode;
+# TFIM: transverse field ising model
 # XXZ: heisenberg 
 # NIX: non-interacting pauli x
 # NIY: non-interacting pauli y
