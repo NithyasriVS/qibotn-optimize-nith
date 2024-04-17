@@ -27,7 +27,7 @@ class QuimbBackend(NumpyBackend):
             
             tebd_enabled_value = runcard.get("TEBD_enabled")
             if tebd_enabled_value is True:
-                self.tebd_opts = {"dt":1e-2}
+                self.tebd_opts = {"dt":1e-2, "hamiltonian": "XXZ"}
             elif tebd_enabled_value is False:
                 self.tebd_opts = None
             elif isinstance(tebd_enabled_value, dict):
@@ -86,9 +86,38 @@ class QuimbBackend(NumpyBackend):
                 NotImplementedError, "QiboTN quimb backend cannot support expectation"
             )
         if self.tebd_enabled == True:
+
+            from qibo import hamiltonians
+            from qibo.hamiltonians import SymbolicHamiltonian
+
+            ham = self.tebd_opts["hamiltonian"]
+            nqubits = circuit.nqubits
+
+            if ham == "TFIM":
+                ham = hamiltonians.TFIM(nqubits=nqubits, dense=False)
+            elif ham == "NIX":
+                ham = hamiltonians.X(nqubits=nqubits, dense=False)
+            elif ham == "NIY":
+                ham = hamiltonians.Y(nqubits=nqubits, dense=False)
+            elif ham == "NIZ":
+                ham = hamiltonians.Z(nqubits=nqubits, dense=False)
+            elif ham == "XXZ":
+                ham = hamiltonians.XXZ(nqubits=nqubits, dense=False)
+            elif ham == "MC":
+                ham = hamiltonians.MaxCut(nqubits=nqubits, dense=False)
+            
+            # Extraction of terms
+
+            terms_list = []
+            list_of_terms = ham.terms
+            for t in list_of_terms:
+                terms_list.append(t.matrix)
+             
+            # Actual TEBD invocation codes below
             print("Add code for TEBD function invocation here")
-            #local_unitary = tbd.handle_unitary(circuit) # pseudocode
-            #tbd.do_tebd(local_unitary) # pseudocode
+            #[NOT RELEVANT FOR ABOVE APPROACH] local_unitary = tbd.handle_unitary(circuit) # pseudocode
+            
+            #tbd.do_tebd(terms_list) # pseudocode
             
             # in eval_qu: a fn that will do tebd and store values of dense vector at diff times
             # in a log file and finally only return the evolved dense vector using .to_dense/

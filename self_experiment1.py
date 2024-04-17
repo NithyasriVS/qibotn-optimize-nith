@@ -9,6 +9,8 @@ import sympy
 ham = hamiltonians.XXZ(nqubits=5, dense=False)
 circuit = ham.circuit(dt=1e-2)
 
+print("Num of qubits: ",circuit.nqubits)
+
 print("Circuit Summary:",circuit.summary())
 print("\nLet's now print the terms in the hamiltonian\n")
 
@@ -31,6 +33,8 @@ for t in list_of_terms:
     
  
 print("Print as an effective 2^n x 2^n matrix: ",ham.matrix)
+
+# previous experimentations commented out
 
 '''print(circuit.summary())
 

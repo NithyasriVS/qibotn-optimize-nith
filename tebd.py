@@ -1,5 +1,6 @@
 import quimb as qmb
 import numpy as np
+import logging
 
 # this file must provide these things
 # 1. a way to extract the hamiltonian unitaries and handle them to be able to pass into TEBD
@@ -8,9 +9,25 @@ import numpy as np
 
 # pseudocode for tebd
 
+
+
 hj = "what exactly - a processed ver of the unitaries"
+# of terms_list is passed to this fn when it's called in quimb.py or eval_qu.py, then what is the
+# relation between the terms and hj
 dt = 1e-2 # in actual get this from the tebd_opts
 u = np.exp(1j * dt * hj) # get this from the circuit so circiut must be passed in as a fn paramter
+
+example_logging = "[EXAMPLE]"
+logging.basicConfig(filename="tebd.log",
+                    format='%(asctime)s %(message)s',
+                    filemode='w')
+
+dense_vector_after_every_dt = "dummy value for now"
+logger = logging.getLogger()
+logger.info("[INFO] ",dense_vector_after_every_dt)
+
+
+
 
 # unitaries -> internally commuting parts
 # individually exponentiate the parts
