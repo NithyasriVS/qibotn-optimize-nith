@@ -106,6 +106,11 @@ class QuimbBackend(NumpyBackend):
                 ham = hamiltonians.XXZ(nqubits=nqubits, dense=False)
             elif ham == "MC":
                 ham = hamiltonians.MaxCut(nqubits=nqubits, dense=False)
+            else:
+                raise_error(
+                NotImplementedError, "QiboTN does not support custom hamiltonians"
+           )
+
             
             # Extraction of terms
 

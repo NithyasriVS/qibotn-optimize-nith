@@ -26,6 +26,8 @@ computation_settings = {
 # NIZ: non-interacting pauli z
 # MC: maxcut
 
+# Raise an NotImplemented error if not from this list
+
 qibo.set_backend(backend="qibotn", platform="qutensornet", runcard=computation_settings)
 
 
