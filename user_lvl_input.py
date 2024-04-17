@@ -15,9 +15,16 @@ computation_settings = {
     "MPS_enabled": False,
     "NCCL_enabled": False,
     "expectation_enabled": False,
-    "TEBD_enabled" : {"dt":dt}
+    "TEBD_enabled" : {"dt":dt, "hamiltonian":"TFIM"}
 }
 
+# Possible list of hamiltonians
+# TFIM: transverse field ising mode;
+# XXZ: heisenberg 
+# NIX: non-interacting pauli x
+# NIY: non-interacting pauli y
+# NIZ: non-interacting pauli z
+# MC: maxcut
 
 qibo.set_backend(backend="qibotn", platform="qutensornet", runcard=computation_settings)
 
