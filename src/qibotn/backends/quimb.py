@@ -122,9 +122,9 @@ class QuimbBackend(NumpyBackend):
              
             # Actual TEBD invocation codes below
             print("Add code for TEBD function invocation here")
-            #[NOT RELEVANT FOR ABOVE APPROACH] local_unitary = tbd.handle_unitary(circuit) # pseudocode
             
-            '''#state = call some fn which must be written in eval_qu to do 
+            '''
+            #state = call some fn which must be written in eval_qu to do 
             # tbd.do_tebd(terms_list, dt) something like this within eval_qu because I'll need these 2 params in tebd.py or just send
             # the terms_list and self.tebd_opts - anything else required must see as we progress
             
