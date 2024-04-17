@@ -18,7 +18,7 @@ computation_settings = {
     "TEBD_enabled" : {"dt":dt, "hamiltonian":"TFIM"}
 }
 
-# Possible list of hamiltonians
+# Possible list of pre-defined qibo symbolic hamiltonians
 # TFIM: transverse field ising model
 # XXZ: heisenberg 
 # NIX: non-interacting pauli x
