@@ -15,16 +15,26 @@ hj = "what exactly - a processed ver of the unitaries"
 # of terms_list is passed to this fn when it's called in quimb.py or eval_qu.py, then what is the
 # relation between the terms and hj
 dt = 1e-2 # in actual get this from the tebd_opts
-u = np.exp(1j * dt * hj) # get this from the circuit so circiut must be passed in as a fn paramter
+#u = np.exp(1j * dt * hj) # get this from the circuit so circiut must be passed in as a fn paramter
 
 example_logging = "[EXAMPLE]"
 logging.basicConfig(filename="tebd.log",
                     format='%(asctime)s %(message)s',
                     filemode='w')
 
-dense_vector_after_every_dt = "dummy value for now"
+dense_vector_after_every_dt = 5 # dummy value just for now
 logger = logging.getLogger()
-logger.info("[INFO] ",dense_vector_after_every_dt)
+
+ 
+# Setting the threshold of logger to DEBUG
+logger.setLevel(logging.DEBUG)
+ 
+# Test messages
+#logger.debug("Harmless debug Message")
+logger.info("Just an information")
+#logger.warning("Its a Warning")
+#logger.error("Did you try to divide by zero")
+#logger.critical("Internet is down")
 
 
 

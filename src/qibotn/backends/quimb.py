@@ -112,15 +112,18 @@ class QuimbBackend(NumpyBackend):
             list_of_terms = ham.terms
             for t in list_of_terms:
                 terms_list.append(t.matrix)
+            
+            fullmatrix = ham.matrix
              
             # Actual TEBD invocation codes below
             print("Add code for TEBD function invocation here")
             #[NOT RELEVANT FOR ABOVE APPROACH] local_unitary = tbd.handle_unitary(circuit) # pseudocode
             
-            #tbd.do_tebd(terms_list) # pseudocode
+            #state = call some fn which must be written in eval_qu to do 
+            # tbd.do_tebd(terms_list) something like this within eval_qu
             
             # in eval_qu: a fn that will do tebd and store values of dense vector at diff times
-            # in a log file and finally only return the evolved dense vector using .to_dense/
+            # in a log file and finally only return the evolved dense vector using .to_dense
         
         state = eval.dense_vector_tn_qu(
             circuit.to_qasm(), initial_state, self.mps_opts, backend="numpy"
