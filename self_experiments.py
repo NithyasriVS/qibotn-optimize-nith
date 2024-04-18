@@ -52,6 +52,8 @@ for t in list_of_terms:
     print("Term ",i," :",t.matrix)
     i=i+1
 
+print("Type ", type(list_of_terms))
+
 '''import quimb.tensor as qtn
 import numpy as np
 
