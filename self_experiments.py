@@ -75,3 +75,11 @@ print("Print as an effective 2^n x 2^n matrix: ",ham.matrix) # symbolic rep effe
 limitation that there can't be custom hams. User will be restricted to pre-defined symbolic hams in
 qibo eg. TFIM, XXZ, MaxCut, Non-interacting Pauli X, Y, Z which must be set  with dense=False'''
 
+i = 0
+commute = []
+
+while i < len(list_of_terms):
+        if i % 2 != 0:
+            commute.append(list_of_terms[i]*list_of_terms[i+1])
+
+print("Internally commuting parts",commute)

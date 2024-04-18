@@ -116,8 +116,6 @@ class QuimbBackend(NumpyBackend):
             for t in list_of_terms:
                 terms_list.append(t.matrix)
             
-            fullmatrix = ham.matrix
-            
             result = eval.tebd(terms_list, dt, nqubits)
             return result
         
