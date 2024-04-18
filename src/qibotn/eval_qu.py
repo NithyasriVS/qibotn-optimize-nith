@@ -44,3 +44,17 @@ def dense_vector_tn_qu(qasm: str, initial_state, mps_opts, backend="numpy"):
     amplitudes = interim.to_dense(backend=backend)
 
     return amplitudes
+
+def tebd(hamiltonian_terms, dt, nqubits):
+
+    # do tebd
+
+    return None
+
+
+    
+        
+
+
+
+

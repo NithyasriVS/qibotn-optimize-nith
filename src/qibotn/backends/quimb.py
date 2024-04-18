@@ -94,42 +94,33 @@ class QuimbBackend(NumpyBackend):
             dt = self.tebd_opts["dt"]
             nqubits = circuit.nqubits
 
-            if ham == "TFIM":
-                ham = hamiltonians.TFIM(nqubits=nqubits, dense=False)
-            elif ham == "NIX":
-                ham = hamiltonians.X(nqubits=nqubits, dense=False)
-            elif ham == "NIY":
-                ham = hamiltonians.Y(nqubits=nqubits, dense=False)
-            elif ham == "NIZ":
-                ham = hamiltonians.Z(nqubits=nqubits, dense=False)
-            elif ham == "XXZ":
-                ham = hamiltonians.XXZ(nqubits=nqubits, dense=False)
-            elif ham == "MC":
-                ham = hamiltonians.MaxCut(nqubits=nqubits, dense=False)
-            else:
-                raise_error(
-                NotImplementedError, "QiboTN does not support custom hamiltonians"
-           )
-
-            # Extraction of terms using symbolic representation qibo
-
+        if ham == "TFIM":
+            ham = hamiltonians.TFIM(nqubits=nqubits, dense=False)
+        elif ham == "NIX":
+            ham = hamiltonians.X(nqubits=nqubits, dense=False)
+        elif ham == "NIY":
+            ham = hamiltonians.Y(nqubits=nqubits, dense=False)
+        elif ham == "NIZ":
+            ham = hamiltonians.Z(nqubits=nqubits, dense=False)
+        elif ham == "XXZ":
+            ham = hamiltonians.XXZ(nqubits=nqubits, dense=False)
+        elif ham == "MC":
+            ham = hamiltonians.MaxCut(nqubits=nqubits, dense=False)
+        else:
+            raise_error(
+                    NotImplementedError, "QiboTN does not support custom hamiltonians"
+            )
+            
             terms_list = []
             list_of_terms = ham.terms
             for t in list_of_terms:
                 terms_list.append(t.matrix)
             
             fullmatrix = ham.matrix
-             
-            # Actual TEBD invocation codes below
-            print("Add code for TEBD function invocation here")
             
-            '''
-            #state = call some fn which must be written in eval_qu to do 
-            # tbd.do_tebd(terms_list, dt) something like this within eval_qu because I'll need these 2 params in tebd.py or just send
-            # the terms_list and self.tebd_opts - anything else required must see as we progress
-            
-            # in eval_qu: a fn that will do tebd and store values of dense vector at diff times
-            # in a log file and finally only return the evolved dense vector using .to_dense'''
+            result = eval.tebd(terms_list, dt, nqubits)
+            return result
+        
         
         state = eval.dense_vector_tn_qu(
             circuit.to_qasm(), initial_state, self.mps_opts, backend="numpy"
