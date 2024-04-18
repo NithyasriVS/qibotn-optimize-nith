@@ -40,24 +40,37 @@ print(extract_local_unitaries(circuit))'''
 ham = hamiltonians.XXZ(nqubits=5, dense=False)
 circuit = ham.circuit(dt=1e-2)
 
+# print(circuit.unitary()) - gives effective 2^n x 2^n matrix of all gates in circ combined
+
 print("Circuit Summary:",circuit.summary())
 print("\nLet's now print the terms in the hamiltonian\n")
 
-# one potential issue here is how to do reverse ham.circuit to circuit.hamiltonian to get the ham 
-# in another python file where tebd is gonna happen
-# is there a reverse of ham.circuit in qibo?
+list_of_terms = ham.terms # using symbolic representation of gates in qibo
 
-# one solution:
-'''in the runcard, the user can specify the name of the hamiltonian. This will however have one
-limitation that there can't be custom hams. User will be restricted to pre-defined symbolic hams in
-qibo eg. TFIM, XXZ, MaxCut, Non-interacting Pauli X, Y, Z which must be set  with dense=False'''
-
-list_of_terms = ham.terms
- 
 i=0
 for t in list_of_terms:
     print("Term ",i," :",t.matrix)
     i=i+1
-    
- 
-print("Print as an effective 2^n x 2^n matrix: ",ham.matrix)
+
+'''import quimb.tensor as qtn
+import numpy as np
+
+nqubits=5
+
+dims = tuple(np.ones(nqubits, dtype=int))
+             
+initial_state = qtn.tensor_1
+
+tebd_object = qtn.TEBD(initial_state, ham.matrix)
+
+print(tebd_object)'''
+
+print("Print as an effective 2^n x 2^n matrix: ",ham.matrix) # symbolic rep effective matrix 
+
+# one potential issue here is how to do reverse ham.circuit to circuit.hamiltonian to get the ham 
+# in another python file where tebd is gonna happen like circuit.hamiltonian
+
+# one workaround/solution:
+'''in the runcard, the user can specify the name of the hamiltonian. This will however have one
+limitation that there can't be custom hams. User will be restricted to pre-defined symbolic hams in
+qibo eg. TFIM, XXZ, MaxCut, Non-interacting Pauli X, Y, Z which must be set  with dense=False'''

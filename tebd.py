@@ -17,7 +17,8 @@ import logging
 # Step 3: If the summands are "non-local", swap gates to be introduced before and after exp
 
         Step 2 or Step2&3 give MPO component tensors at outcome
-
+        
+        no need step 3! - as per discussion
 # Step 4: "Place" these tensors within MPO spanning entire system which gives us Ua
 
 # Step 5: Do SVD of Ua 
@@ -28,7 +29,8 @@ import logging
 # Step 7: Append the reversed list of MPOs to itself so that new U = {U1, U2, U3, U3, U2, U1}
 
 # Step 8: Now, to actually do the evolution of the ""state", keep "applying" U to the state, 
-          each time advancing the state by delta time
+          each time advancing the state by delta time - is the state here the initial state 
+          defined in eval_qu as a random MPS state using eval_qu.py
 '''
 
 hj = "internally commuting part"
