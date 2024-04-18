@@ -110,7 +110,7 @@ class QuimbBackend(NumpyBackend):
             raise_error(
                     NotImplementedError, "QiboTN does not support custom hamiltonians"
             )
-            
+
             terms_list = []
             list_of_terms = ham.terms
             for t in list_of_terms:
@@ -120,7 +120,6 @@ class QuimbBackend(NumpyBackend):
             
             result = eval.tebd(terms_list, dt, nqubits)
             return result
-        
         
         state = eval.dense_vector_tn_qu(
             circuit.to_qasm(), initial_state, self.mps_opts, backend="numpy"
