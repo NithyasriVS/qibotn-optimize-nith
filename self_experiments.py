@@ -65,7 +65,7 @@ tebd_object = qtn.TEBD(initial_state, ham.matrix)
 
 print(tebd_object)'''
 
-print("Print as an effective 2^n x 2^n matrix: ",ham.matrix) # symbolic rep effective matrix 
+#print("Print as an effective 2^n x 2^n matrix: ",ham.matrix) # symbolic rep effective matrix 
 
 # one potential issue here is how to do reverse ham.circuit to circuit.hamiltonian to get the ham 
 # in another python file where tebd is gonna happen like circuit.hamiltonian
