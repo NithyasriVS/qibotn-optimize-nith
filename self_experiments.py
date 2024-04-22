@@ -56,7 +56,7 @@ circuit = ham.circuit(dt=dt)'''
 qibo.set_backend(backend="qibotn", platform="qutensornet", runcard=computation_settings)
 
 
-print(qmb.invoke_tebd())
+print(qmb.tebd())
 '''# Execute the circuit and obtain the final state
 result = circuit()
 
