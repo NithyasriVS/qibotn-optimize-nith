@@ -1,8 +1,8 @@
 from qibo.backends.numpy import NumpyBackend
 from qibo.config import raise_error
 from qibo.result import QuantumState
-import tebd as tbd
 
+global tebd_enabled_value
 
 class QuimbBackend(NumpyBackend):
 
@@ -85,7 +85,7 @@ class QuimbBackend(NumpyBackend):
             raise_error(
                 NotImplementedError, "QiboTN quimb backend cannot support expectation"
             )
-        if self.tebd_enabled == True:
+        if self.tebd_enabled_value == True:
 
             from qibo import hamiltonians
             from qibo.hamiltonians import SymbolicHamiltonian
@@ -111,12 +111,14 @@ class QuimbBackend(NumpyBackend):
                     NotImplementedError, "QiboTN does not support custom hamiltonians"
             )
 
-            terms_list = []
             list_of_terms = ham.terms
+            terms_dict = {}
+            i=0
             for t in list_of_terms:
-                terms_list.append(t.matrix)
-            
-            result = eval.tebd(terms_list, dt, nqubits)
+                terms_dict.update({None: t.matrix})
+                i=i+1
+
+            result = eval.tebd_tn_qu(terms_dict, dt, nqubits)
             return result
         
         state = eval.dense_vector_tn_qu(

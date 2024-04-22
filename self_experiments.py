@@ -2,8 +2,10 @@ import qibo
 from qibo import hamiltonians, gates, models
 from qibo import Circuit
 from qibo.quantum_info import pauli_basis, comp_basis_to_pauli
-from qibo.hamiltonians import SymbolicHamiltonian as sh
+from qibo.hamiltonians import SymbolicHamiltonian
 import sympy
+
+
 
 '''print(circuit.summary())
 print(ham.terms)
@@ -35,10 +37,27 @@ def extract_local_unitaries(circuit):
     return lu
 print(extract_local_unitaries(circuit))'''
 
+dt = 1e-4
+nqubits = 5 
+
+computation_settings = {
+    "MPI_enabled": False,
+    "MPS_enabled": False,
+    "NCCL_enabled": False,
+    "expectation_enabled": False,
+    "TEBD_enabled" : {"dt":dt, "hamiltonian":"TFIM"}
+}
 
 # Step 1) Cast a hamiltonian as circuit using TD
-ham = hamiltonians.XXZ(nqubits=5, dense=False)
-circuit = ham.circuit(dt=1e-2)
+ham = hamiltonians.XXZ(nqubits=nqubits, dense=False)
+circuit = ham.circuit(dt=dt)
+
+qibo.set_backend(backend="qibotn", platform="qutensornet", runcard=computation_settings)
+
+# Execute the circuit and obtain the final state
+result = circuit()
+
+print(result.state())
 
 # print(circuit.unitary()) - gives effective 2^n x 2^n matrix of all gates in circ combined
 
@@ -100,6 +119,8 @@ while i < len(list_of_terms):
         i+=1
 
 print("Internally commuting parts",commute)'''
+
+'''Independent working code:
 import quimb.tensor as qtn
 import numpy as np
 
@@ -127,11 +148,11 @@ print(x)
 
 print(x.to_dense())
 
-'''for psi in tebd.at_times(ts, tol=1e-4):
+for psi in tebd.at_times(ts, tol=1e-4):
 
-    print(tebd.at_times(psi))'''
+    print(tebd.at_times(psi))
 
-'''mz_t_j = []
+mz_t_j = []
 for psi in tebd.at_times(ts, tol=tot):
     mz_j = []
     mz_j += [psi.magnetization(0)]

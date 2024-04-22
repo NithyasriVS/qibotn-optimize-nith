@@ -45,13 +45,27 @@ def dense_vector_tn_qu(qasm: str, initial_state, mps_opts, backend="numpy"):
 
     return amplitudes
 
-def tebd(hamiltonian_terms, dt, nqubits):
+def tebd_tn_qu(hamiltonian_terms, dt, nqubits):
 
-    # do tebd
-    
-                
+    for i in range(0,nqubits): # initial state will always be n zeros
+        binary = ''+'0'
+    psi0 = qtn.MPS_computational_state(binary)
 
-    return None
+
+    #H = qtn.ham_1d_heis(L)
+    H = qtn.LocalHam1D(nqubits, H2=hamiltonian_terms)
+
+    tebd = qtn.TEBD(psi0, H)
+
+    dt=dt
+    tot = 1
+    ts = np.arange(0, tot, dt)
+
+    interim = next(tebd.at_times(ts,tol=1e-3))
+
+    amplitudes = interim.to_dense()
+    print(amplitudes)
+    return amplitudes
 
 
     
