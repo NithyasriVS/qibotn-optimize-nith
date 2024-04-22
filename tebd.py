@@ -33,7 +33,7 @@ import logging
           defined in eval_qu as a random MPS state using eval_qu.py
 '''
 
-hj = "internally commuting part"
+'''hj = "internally commuting part"
 # of terms_list is passed to this fn when it's called in quimb.py or eval_qu.py, then what is the
 # relation between the terms and hj
 dt = 1e-2 # in actual get this from the tebd_opts
@@ -66,11 +66,29 @@ logger.info("Just an information")
 # final mps after evol
 
 # interesting point and potential challenge here:
-''' 
+
 how are we gonna reconstruct this as a quimb CircuitMPS object so that .to_dense can be used to
 get the dense vector?
 
 and at different dts until total time, I wanna log these dense vector values and only return the
 dense vector value of the final mps - DOES THIS EVEN MAKE SENSE AND IS IT DOABLE?
-'''
-# dense vector of final mps
+
+# dense vector of final mps'''
+
+import numpy as np
+total_time = 1
+dt = 1e-3
+
+H = 'insert hamiltonian here'
+
+for t in total_time(dt, 1, dt):
+    
+    evo = np.exp(-np.imag*dt*H)
+
+
+
+
+    
+    
+
+

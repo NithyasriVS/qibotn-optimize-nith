@@ -47,6 +47,7 @@ print("\nLet's now print the terms in the hamiltonian\n")
 
 list_of_terms = ham.terms # using symbolic representation of gates in qibo
 
+terms_dict = {}
 i=0
 for t in list_of_terms:
     print("Term ",i," :",t.matrix)
@@ -78,7 +79,7 @@ limitation that there can't be custom hams. User will be restricted to pre-defin
 qibo eg. TFIM, XXZ, MaxCut, Non-interacting Pauli X, Y, Z which must be set  with dense=False'''
 
 
-i = 0
+'''i = 0
 commute = []
 
 while i < len(list_of_terms):
@@ -86,4 +87,4 @@ while i < len(list_of_terms):
             commute.append(list_of_terms[i]*list_of_terms[i+1])
         i+=1
 
-print("Internally commuting parts",commute)
+print("Internally commuting parts",commute)'''
