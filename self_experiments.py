@@ -24,11 +24,15 @@ circuit = ham.circuit(dt=dt)
 
 #qibo.set_backend(backend="qibotn", platform="qutensornet", runcard=computation_settings)
 
+'''# Execute the circuit and obtain the final state
+result = circuit()
+
+print(result.state())'''
 
 #print(qmb.tebd())
 
-
-#Independent working code:
+import quimb.tensor as qtn
+#Independent working code (without qibotn integration):
 import quimb.tensor as qtn
 import numpy as np
 
@@ -64,14 +68,6 @@ print(x)
 
 print(x.to_dense())
 
-
-
-
-
-'''# Execute the circuit and obtain the final state
-result = circuit()
-
-print(result.state())'''
 
 # print(circuit.unitary()) - gives effective 2^n x 2^n matrix of all gates in circ combined
 
