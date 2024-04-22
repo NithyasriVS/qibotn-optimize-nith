@@ -66,9 +66,6 @@ def tebd_tn_qu(hamiltonian_terms, dt, nqubits):
     amplitudes = interim.to_dense()
     print(amplitudes)
     return amplitudes
-
-
-    
         
 
 

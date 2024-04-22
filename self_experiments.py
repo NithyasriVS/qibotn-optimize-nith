@@ -4,6 +4,7 @@ from qibo import Circuit
 from qibo.quantum_info import pauli_basis, comp_basis_to_pauli
 from qibo.hamiltonians import SymbolicHamiltonian
 import sympy
+import qibotn.backends.quimb as qmb
 
 
 
@@ -54,10 +55,8 @@ circuit = ham.circuit(dt=dt)'''
 
 qibo.set_backend(backend="qibotn", platform="qutensornet", runcard=computation_settings)
 
-import qibotn.backends.quimb as qmb
 
 print(qmb.invoke_tebd())
-
 '''# Execute the circuit and obtain the final state
 result = circuit()
 
