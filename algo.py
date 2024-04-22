@@ -20,23 +20,25 @@ i=0
 for t in ham_terms:
     terms.append(t.matrix)
     i=i+1
+print("Terms",terms)
 
 # splitting into commuting parts
 
 H_odd = []
 H_even = []
 j=0
+# 0 odd 1 even 2 odd 3 even 
 while j < len(terms):
     if j % 2 == 0:
-        H_even.append(terms[j]*terms[j+1])
-    else:
         H_odd.append(terms[j]*terms[j+1])
+    else:
+        H_even.append(terms[j]*terms[j+1])
         j+=1
 
-print(H_odd)
-print(H_even)
+print("Hodd",H_odd)
+print("Heven",H_even)
 
-# exponentiation
+'''# exponentiation
 
 for delta in range(0, 1, dt):
     for term in H_odd:
@@ -46,6 +48,5 @@ for delta in range(0, 1, dt):
     for term in H_even:
         evol_even = np.exp(-1*np.imag*delta*H_even)
 
-final_evol = evol_odd*evol_even
+U_tebd1 = evol_odd*evol_even'''
 
-print(final_evol)

@@ -47,7 +47,7 @@ print("\nLet's now print the terms in the hamiltonian\n")
 
 list_of_terms = ham.terms # using symbolic representation of gates in qibo
 
-terms_dict = {}
+terms_dict = []
 i=0
 for t in list_of_terms:
     print("Term ",i," :",t.matrix)
@@ -88,3 +88,20 @@ while i < len(list_of_terms):
         i+=1
 
 print("Internally commuting parts",commute)'''
+import quimb.tensor as qtn
+import numpy as np
+
+L = 5
+binary = '00000'
+psi0 = qtn.MPS_computational_state(binary)
+
+
+#H = qtn.ham_1d_heis(L)
+H = qtn.LocalHam1D(L, H2=terms_dict)
+
+print("Quimb ham ",H)
+
+tebd = qtn.TEBD(psi0, H)
+
+
+
