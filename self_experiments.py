@@ -64,7 +64,7 @@ ts = np.arange(0, tot, dt)
 
 x = next(tebd.at_times(ts,tol=tot))
 
-print(x)
+#print(x)
 
 print(x.to_dense())
 
