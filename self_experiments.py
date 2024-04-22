@@ -119,7 +119,19 @@ dt=1e-4
 tot = 1
 ts = np.arange(0, tot, dt)
 
-mz_t_j = []
+#print(yield from tebd.at_times(ts))
+
+x = next(tebd.at_times(ts,tol=tot))
+
+print(x)
+
+print(x.to_dense())
+
+'''for psi in tebd.at_times(ts, tol=1e-4):
+
+    print(tebd.at_times(psi))'''
+
+'''mz_t_j = []
 for psi in tebd.at_times(ts, tol=tot):
     mz_j = []
     mz_j += [psi.magnetization(0)]
@@ -127,7 +139,7 @@ for psi in tebd.at_times(ts, tol=tot):
     for j in range(1, L):
         # after which we only need to move it from previous site
         mz_j += [psi.magnetization(j, cur_orthog=j - 1)]
-    mz_t_j += [mz_j]
+    mz_t_j += [mz_j]'''
 
 
 
