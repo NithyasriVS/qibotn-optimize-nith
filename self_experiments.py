@@ -47,13 +47,25 @@ print("\nLet's now print the terms in the hamiltonian\n")
 
 list_of_terms = ham.terms # using symbolic representation of gates in qibo
 
-terms_dict = []
+terms_list = []
 i=0
 for t in list_of_terms:
+    terms_list.append(t.matrix)
     print("Term ",i," :",t.matrix)
     i=i+1
 
 print("Type ", type(list_of_terms))
+
+#actual_dict = dict(terms_dict)
+print(terms_list)
+
+
+terms_dict = {}
+i=0
+for t in list_of_terms:
+    terms_dict.update({None: t.matrix})
+    i=i+1
+print(terms_dict)
 
 '''import quimb.tensor as qtn
 import numpy as np
@@ -102,6 +114,30 @@ H = qtn.LocalHam1D(L, H2=terms_dict)
 print("Quimb ham ",H)
 
 tebd = qtn.TEBD(psi0, H)
+
+dt=1e-4
+tot = 1
+ts = np.arange(0, tot, dt)
+
+mz_t_j = []
+for psi in tebd.at_times(ts, tol=tot):
+    mz_j = []
+    mz_j += [psi.magnetization(0)]
+
+    for j in range(1, L):
+        # after which we only need to move it from previous site
+        mz_j += [psi.magnetization(j, cur_orthog=j - 1)]
+    mz_t_j += [mz_j]
+
+
+
+
+
+
+
+
+
+
 
 
 
