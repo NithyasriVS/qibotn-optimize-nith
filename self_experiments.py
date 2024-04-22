@@ -5,7 +5,7 @@ from qibo import Circuit
 #from qibo.hamiltonians import SymbolicHamiltonian
 #import sympy
 import qibotn.backends.quimb as qmb
-
+'''
 dt = 1e-4
 nqubits = 5 
 
@@ -15,19 +15,20 @@ computation_settings = {
     "NCCL_enabled": False,
     "expectation_enabled": False,
     "TEBD_enabled" : {"dt":dt, "hamiltonian":"TFIM"}
-}
-
-'''# Step 1) Cast a hamiltonian as circuit using TD
+}'''
+nqubits=5
+dt=1e-4
+# Step 1) Cast a hamiltonian as circuit using TD
 ham = hamiltonians.XXZ(nqubits=nqubits, dense=False)
-circuit = ham.circuit(dt=dt)'''
+circuit = ham.circuit(dt=dt)
 
-qibo.set_backend(backend="qibotn", platform="qutensornet", runcard=computation_settings)
-
-
-print(qmb.tebd())
+#qibo.set_backend(backend="qibotn", platform="qutensornet", runcard=computation_settings)
 
 
-'''Independent working code:
+#print(qmb.tebd())
+
+
+#Independent working code:
 import quimb.tensor as qtn
 import numpy as np
 
@@ -35,6 +36,14 @@ L = 5
 binary = '00000'
 psi0 = qtn.MPS_computational_state(binary)
 
+
+terms_dict = {}
+i=0
+list_of_terms = ham.terms
+for t in list_of_terms:
+    terms_dict.update({None: t.matrix})
+    i=i+1
+print(terms_dict)
 
 #H = qtn.ham_1d_heis(L)
 H = qtn.LocalHam1D(L, H2=terms_dict)
@@ -53,7 +62,7 @@ x = next(tebd.at_times(ts,tol=tot))
 
 print(x)
 
-print(x.to_dense())'''
+print(x.to_dense())
 
 
 
