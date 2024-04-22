@@ -6,36 +6,6 @@ from qibo import Circuit
 #import sympy
 import qibotn.backends.quimb as qmb
 
-'''print(circuit.summary())
-print(ham.terms)
-for t in ham.terms:
-    print("Matrix:",t.matrix)
-#print("Ham terms",sh._get_symbol_matrix(self,ham.terms))
-print(ham.matrix)
-def handle_unitary(circuit):
-    return circuit.unitary()
-matrix_of_combined_local_unitaries = handle_unitary(circuit)
-print(matrix_of_combined_local_unitaries)'''
-'''dec = circuit.decompose(0)
-print(circuit.summary)
-print(circuit.draw)
-print(dec)
-# Step 2) Extraction of hamiltonian from circuit
-# 15apr
-print(circuit.unitary()) # experiment 2 -> converts to 2^n x 2^n matrix
-# Method 1: OpenQASM
-# Challenge: Unitary is not supported by OpenQASM
-# 15apr [IMPORTANT COMMENT]: this error is not coming from qibo circuits.py but directly from OpenQASM
-print(circuit.to_qasm())
-# Method 2: Manual extraction
-# Challenge: Not able to extract as a matrix
-def extract_local_unitaries(circuit):
-    lu = []
-    for gate in circuit.gates_of_type(qibo.gates.Unitary):
-        lu = gate.matrix
-    return lu
-print(extract_local_unitaries(circuit))'''
-
 dt = 1e-4
 nqubits = 5 
 
@@ -55,6 +25,40 @@ qibo.set_backend(backend="qibotn", platform="qutensornet", runcard=computation_s
 
 
 print(qmb.tebd())
+
+
+'''Independent working code:
+import quimb.tensor as qtn
+import numpy as np
+
+L = 5
+binary = '00000'
+psi0 = qtn.MPS_computational_state(binary)
+
+
+#H = qtn.ham_1d_heis(L)
+H = qtn.LocalHam1D(L, H2=terms_dict)
+
+print("Quimb ham ",H)
+
+tebd = qtn.TEBD(psi0, H)
+
+dt=1e-4
+tot = 1
+ts = np.arange(0, tot, dt)
+
+#print(yield from tebd.at_times(ts))
+
+x = next(tebd.at_times(ts,tol=tot))
+
+print(x)
+
+print(x.to_dense())'''
+
+
+
+
+
 '''# Execute the circuit and obtain the final state
 result = circuit()
 
@@ -121,33 +125,7 @@ while i < len(list_of_terms):
 
 print("Internally commuting parts",commute)'''
 
-'''Independent working code:
-import quimb.tensor as qtn
-import numpy as np
-
-L = 5
-binary = '00000'
-psi0 = qtn.MPS_computational_state(binary)
-
-
-#H = qtn.ham_1d_heis(L)
-H = qtn.LocalHam1D(L, H2=terms_dict)
-
-print("Quimb ham ",H)
-
-tebd = qtn.TEBD(psi0, H)
-
-dt=1e-4
-tot = 1
-ts = np.arange(0, tot, dt)
-
-#print(yield from tebd.at_times(ts))
-
-x = next(tebd.at_times(ts,tol=tot))
-
-print(x)
-
-print(x.to_dense())
+'''
 
 for psi in tebd.at_times(ts, tol=1e-4):
 
@@ -163,6 +141,36 @@ for psi in tebd.at_times(ts, tol=tot):
         mz_j += [psi.magnetization(j, cur_orthog=j - 1)]
     mz_t_j += [mz_j]'''
 
+
+'''print(circuit.summary())
+print(ham.terms)
+for t in ham.terms:
+    print("Matrix:",t.matrix)
+#print("Ham terms",sh._get_symbol_matrix(self,ham.terms))
+print(ham.matrix)
+def handle_unitary(circuit):
+    return circuit.unitary()
+matrix_of_combined_local_unitaries = handle_unitary(circuit)
+print(matrix_of_combined_local_unitaries)'''
+'''dec = circuit.decompose(0)
+print(circuit.summary)
+print(circuit.draw)
+print(dec)
+# Step 2) Extraction of hamiltonian from circuit
+# 15apr
+print(circuit.unitary()) # experiment 2 -> converts to 2^n x 2^n matrix
+# Method 1: OpenQASM
+# Challenge: Unitary is not supported by OpenQASM
+# 15apr [IMPORTANT COMMENT]: this error is not coming from qibo circuits.py but directly from OpenQASM
+print(circuit.to_qasm())
+# Method 2: Manual extraction
+# Challenge: Not able to extract as a matrix
+def extract_local_unitaries(circuit):
+    lu = []
+    for gate in circuit.gates_of_type(qibo.gates.Unitary):
+        lu = gate.matrix
+    return lu
+print(extract_local_unitaries(circuit))'''
 
 
 
