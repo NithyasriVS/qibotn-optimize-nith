@@ -1,12 +1,10 @@
 import qibo
 from qibo import hamiltonians, gates, models
 from qibo import Circuit
-from qibo.quantum_info import pauli_basis, comp_basis_to_pauli
-from qibo.hamiltonians import SymbolicHamiltonian
-import sympy
+#from qibo.quantum_info import pauli_basis, comp_basis_to_pauli
+#from qibo.hamiltonians import SymbolicHamiltonian
+#import sympy
 import qibotn.backends.quimb as qmb
-
-
 
 '''print(circuit.summary())
 print(ham.terms)
