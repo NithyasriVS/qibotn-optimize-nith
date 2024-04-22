@@ -48,16 +48,20 @@ computation_settings = {
     "TEBD_enabled" : {"dt":dt, "hamiltonian":"TFIM"}
 }
 
-# Step 1) Cast a hamiltonian as circuit using TD
+'''# Step 1) Cast a hamiltonian as circuit using TD
 ham = hamiltonians.XXZ(nqubits=nqubits, dense=False)
-circuit = ham.circuit(dt=dt)
+circuit = ham.circuit(dt=dt)'''
 
 qibo.set_backend(backend="qibotn", platform="qutensornet", runcard=computation_settings)
 
-# Execute the circuit and obtain the final state
+import qibotn.backends.quimb as qmb
+
+print(qmb.invoke_tebd())
+
+'''# Execute the circuit and obtain the final state
 result = circuit()
 
-print(result.state())
+print(result.state())'''
 
 # print(circuit.unitary()) - gives effective 2^n x 2^n matrix of all gates in circ combined
 
