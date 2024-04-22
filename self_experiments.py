@@ -61,7 +61,7 @@ print(result.state())
 
 # print(circuit.unitary()) - gives effective 2^n x 2^n matrix of all gates in circ combined
 
-print("Circuit Summary:",circuit.summary())
+'''print("Circuit Summary:",circuit.summary())
 print("\nLet's now print the terms in the hamiltonian\n")
 
 list_of_terms = ham.terms # using symbolic representation of gates in qibo
@@ -84,7 +84,7 @@ i=0
 for t in list_of_terms:
     terms_dict.update({None: t.matrix})
     i=i+1
-print(terms_dict)
+print(terms_dict)'''
 
 '''import quimb.tensor as qtn
 import numpy as np
