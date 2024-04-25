@@ -20,8 +20,10 @@ nqubits=5
 dt=1e-4
 # Step 1) Cast a hamiltonian as circuit using TD
 ham = hamiltonians.XXZ(nqubits=nqubits, dense=False)
-#ham = hamiltonians.TFIM(nqubits=6, dense=False)
+#ham = hamiltonians.TFIM(nqubits=6)
 #ham = hamiltonians.X(nqubits=6, dense=False)
+#ham = hamiltonians.Y(nqubits=nqubits, dense=False)
+#ham = hailtonians.Z(nqubits=6, dense=False)
 #ham = hamiltonians.MaxCut(nqubits=5, dense=False)
 circuit = ham.circuit(dt=dt)
 
@@ -41,6 +43,10 @@ import numpy as np
 
 L = 5
 binary = '00000'
+#binary = '01001'
+#binary = '11111'
+#binary = '10101'
+#binary = '01010'
 psi0 = qtn.MPS_computational_state(binary) # initial state
 
 
