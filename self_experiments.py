@@ -37,8 +37,6 @@ print(result.state())'''
 #print(qmb.tebd())
 
 import quimb.tensor as qtn
-#Independent working code (without qibotn integration):
-import quimb.tensor as qtn
 import numpy as np
 
 L = 5
@@ -78,7 +76,7 @@ print(x.to_dense())
 
 file_path = "log2.txt"
 with open(file_path, 'w') as file:
-    for t in tebd.at_times(ts, tol=tot):
+    for t in tebd.at_times(ts, tol=tot, progbar=False): #progbar=False
         print(t.to_dense())
         file.write("\n"+str(t.to_dense()))
      
