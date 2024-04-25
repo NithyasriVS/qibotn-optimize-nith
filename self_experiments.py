@@ -76,7 +76,7 @@ print(x.to_dense())
 
 file_path = "log2.txt"
 with open(file_path, 'w') as file:
-    for t in tebd.at_times(ts, tol=tot, progbar=False): #progbar=False
+    for t in tebd.at_times(ts, tol=tot): #progbar=False
         print(t.to_dense())
         file.write("\n"+str(t.to_dense()))
      
