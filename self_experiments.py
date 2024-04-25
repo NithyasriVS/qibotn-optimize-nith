@@ -20,6 +20,9 @@ nqubits=5
 dt=1e-4
 # Step 1) Cast a hamiltonian as circuit using TD
 ham = hamiltonians.XXZ(nqubits=nqubits, dense=False)
+#ham = hamiltonians.TFIM(nqubits=6, dense=False)
+#ham = hamiltonians.X(nqubits=6, dense=False)
+#ham = hamiltonians.MaxCut(nqubits=5, dense=False)
 circuit = ham.circuit(dt=dt)
 
 #qibo.set_backend(backend="qibotn", platform="qutensornet", runcard=computation_settings)
@@ -38,21 +41,21 @@ import numpy as np
 
 L = 5
 binary = '00000'
-psi0 = qtn.MPS_computational_state(binary)
+psi0 = qtn.MPS_computational_state(binary) # initial state
 
 
-terms_dict = {}
+terms_dict = {} # need the symb rep terms as dict for LocalHam1D fn
 i=0
 list_of_terms = ham.terms
 for t in list_of_terms:
     terms_dict.update({None: t.matrix})
     i=i+1
-print(terms_dict)
+#print(terms_dict)
 
 #H = qtn.ham_1d_heis(L)
 H = qtn.LocalHam1D(L, H2=terms_dict)
 
-print("Quimb ham ",H)
+#print("Quimb ham ",H)
 
 tebd = qtn.TEBD(psi0, H)
 
@@ -62,11 +65,21 @@ ts = np.arange(0, tot, dt)
 
 #print(yield from tebd.at_times(ts))
 
-x = next(tebd.at_times(ts,tol=tot))
-
-#print(x)
-
+x = next(tebd.at_times(ts, tol=1e-3)) # next() gives saved state
 print(x.to_dense())
+
+#print("Normalization of final state:",tebd.pt.H @ tebd.pt)
+
+file_path = "log2.txt"
+with open(file_path, 'w') as file:
+    for t in tebd.at_times(ts, tol=tot):
+        print(t.to_dense())
+        file.write("\n"+str(t.to_dense()))
+     
+    
+#print(x)
+#for i in x:
+#   print(x.to_dense())
 
 
 # print(circuit.unitary()) - gives effective 2^n x 2^n matrix of all gates in circ combined
