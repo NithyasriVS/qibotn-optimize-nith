@@ -1,6 +1,7 @@
 import cupy as cp
 from cupy.cuda.runtime import getDeviceCount
 from cuquantum import contract
+import algos.qaoa as qaoa
 
 from qibotn.circuit_convertor import QiboCircuitToEinsum
 from qibotn.circuit_to_mps import QiboCircuitToMPS
@@ -417,3 +418,23 @@ def pauli_string_gen(nqubits, pauli_string_pattern):
         char_to_add = pauli_string_pattern[i % len(pauli_string_pattern)]
         result += char_to_add
     return result
+
+def qaoa_execute(qibo_circ, runcard_qaoa, runcard_mps):
+
+    nqubits = qibo_circ.nqubits
+    circuit = qaoa.prepare_qaoa_circuit(qibo_circ, runcard_qaoa, nqubits)
+
+    gate_algo = runcard_mps["gate_algo"]
+    datatype = runcard_mps["datatype"]
+
+    myconvertor = QiboCircuitToMPS(qibo_circ, gate_algo, dtype=datatype) # convert circuit to MPS
+
+    # after this is the other level: how to optimize contraction
+
+        
+
+
+
+        
+        
+        

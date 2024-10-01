@@ -28,6 +28,9 @@ class CuTensorNet(NumpyBackend):  # pragma: no cover
             self.MPI_enabled = runcard.get("MPI_enabled", False)
             self.NCCL_enabled = runcard.get("NCCL_enabled", False)
 
+            # Algorithms
+            self.QAOA_execute = runcard.get("QAOA_execute", False)
+
             expectation_enabled_value = runcard.get("expectation_enabled")
             if expectation_enabled_value is True:
                 self.expectation_enabled = True
@@ -60,6 +63,8 @@ class CuTensorNet(NumpyBackend):  # pragma: no cover
                 self.gate_algo = mps_enabled_value
             else:
                 raise TypeError("MPS_enabled has an unexpected type")
+            
+            qaoa_execute_value = runcard.get("QAOA_execute")
 
         else:
             self.MPI_enabled = False
@@ -190,6 +195,12 @@ class CuTensorNet(NumpyBackend):  # pragma: no cover
                 state = np.array(0)
         else:
             raise_error(NotImplementedError, "Compute type not supported.")
+        
+        if self.QAOA_execute is True and self.MPS_enabled is True:
+                import algos.qaoa as qaoa
+                runcard_settings_qaoa = self.QAOA_execute_value
+                runcard_settings_mps = self.MPS_enabled_value
+                eval.qaoa_execute(circuit, runcard_settings_qaoa, runcard_settings_mps)
 
         if return_array:
             return state.flatten()
