@@ -431,6 +431,9 @@ def qaoa_execute(qibo_circ, runcard_qaoa, runcard_mps):
 
     # after this is the other level: how to optimize contraction
 
+    # temp
+    return contract(*myconvertor.state_vector_operands())
+
         
 
 
