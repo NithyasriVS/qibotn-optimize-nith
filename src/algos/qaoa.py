@@ -8,11 +8,6 @@ def prepare_qaoa_circuit(circuit, runcard, nqubits):
     circ_depth = runcard["circ_depth"]
     gamma = runcard["cost_evolution_param"]
     beta = runcard["mixer_evolution_param"] # can be None
-
-    '''qaoa_circ = Circuit(nqubits)
-    # put into uniform superposition
-    for i in range(0, nqubits):
-        qaoa_circ.add(gates.H(i))'''
     
     qubits = list(range(nqubits))
     evol_hc = ham_cost.exp(gamma)
