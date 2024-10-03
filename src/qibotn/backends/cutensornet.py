@@ -193,15 +193,16 @@ class CuTensorNet(NumpyBackend):  # pragma: no cover
             )
             if rank > 0:
                 state = np.array(0)
-        else:
-            raise_error(NotImplementedError, "Compute type not supported.")
         
-        if self.QAOA_execute is True and self.MPS_enabled is True:
+        elif self.QAOA_execute is True and self.MPS_enabled is True:
                 import algos.qaoa as qaoa
                 runcard_settings_qaoa = self.QAOA_execute_value
                 runcard_settings_mps = self.MPS_enabled_value
-                eval.qaoa_execute(circuit, runcard_settings_qaoa, runcard_settings_mps)
+                state = eval.qaoa_execute(circuit, runcard_settings_qaoa, runcard_settings_mps)
 
+        else:
+            raise_error(NotImplementedError, "Compute type not supported.")
+        
         if return_array:
             return state.flatten()
         else:
