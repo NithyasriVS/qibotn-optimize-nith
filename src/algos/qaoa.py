@@ -1,5 +1,6 @@
 import qibo
 from qibo import hamiltonians, gates, Circuit
+import numpy as np
 
 def prepare_qaoa_circuit(circuit, runcard, nqubits):
 
@@ -11,6 +12,7 @@ def prepare_qaoa_circuit(circuit, runcard, nqubits):
     
     qubits = list(range(nqubits))
     evol_hc = ham_cost.exp(gamma)
+    # evol_hc = ham_cost.exp(-1*np.i*gamma)
     u_hc = gates.Unitary(evol_hc, *qubits)
 
     if ham_mixer is not None:
