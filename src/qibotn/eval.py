@@ -421,6 +421,7 @@ def pauli_string_gen(nqubits, pauli_string_pattern):
 
 def qaoa_execute(qibo_circ, runcard_qaoa, runcard_mps):
 
+    import algos.qaoa as qaoa
     nqubits = qibo_circ.nqubits
     circuit = qaoa.prepare_qaoa_circuit(qibo_circ, runcard_qaoa, nqubits)
 
