@@ -419,7 +419,7 @@ def pauli_string_gen(nqubits, pauli_string_pattern):
         result += char_to_add
     return result
 
-def qaoa_execute(qibo_circ, runcard_qaoa, runcard_mps):
+def qaoa_execute(qibo_circ, pauli_string_pattern, runcard_qaoa, runcard_mps):
 
     import algos.qaoa as qaoa
     nqubits = qibo_circ.nqubits
@@ -428,12 +428,17 @@ def qaoa_execute(qibo_circ, runcard_qaoa, runcard_mps):
     gate_algo = runcard_mps["gate_algo"]
     datatype = runcard_mps["datatype"]
 
-    myconvertor = QiboCircuitToMPS(qibo_circ, gate_algo, dtype=datatype) # convert circuit to MPS
+    myconvertor = QiboCircuitToEinsum(qibo_circ, dtype=datatype)
+    return contract(
+        *myconvertor.expectation_operands(
+            pauli_string_gen(qibo_circ.nqubits, pauli_string_pattern)
+        )
+    )
+
 
     # after this is the other level: how to optimize contraction
 
     # temp
-    return contract(*myconvertor.state_vector_operands())
 
         
 

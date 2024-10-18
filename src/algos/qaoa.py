@@ -1,6 +1,7 @@
 import qibo
-from qibo import hamiltonians, gates, Circuit
+from qibo import hamiltonians, models, gates, Circuit
 import numpy as np
+
 
 def prepare_qaoa_circuit(circuit, runcard, nqubits):
 
@@ -18,6 +19,12 @@ def prepare_qaoa_circuit(circuit, runcard, nqubits):
     if ham_mixer is not None:
         evol_hm = ham_mixer.exp(gamma)
         u_hm = gates.Unitary(evol_hm, *qubits)
+    
+    qaoa_classical = models.QAOA(ham_cost, ham_mixer)
+    initial_parameters = 0.01 * np.random.uniform(0,1,4)
+    best_energy, final_parameters, extra = qaoa_classical.minimize(initial_parameters, method="BFGS")
+
+    
 
     # add to the circuit alternative evolution of hc and hm
     for circ_depth in range(0, circ_depth):
