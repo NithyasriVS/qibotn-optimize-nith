@@ -419,26 +419,19 @@ def pauli_string_gen(nqubits, pauli_string_pattern):
         result += char_to_add
     return result
 
-def qaoa_execute(qibo_circ, pauli_string_pattern, runcard_qaoa, runcard_mps):
-
-    import algos.qaoa as qaoa
-    nqubits = qibo_circ.nqubits
-    circuit = qaoa.prepare_qaoa_circuit(qibo_circ, runcard_qaoa, nqubits)
-
-    gate_algo = runcard_mps["gate_algo"]
-    datatype = runcard_mps["datatype"]
+def qaoa_execute(qibo_circ, datatype):
 
     myconvertor = QiboCircuitToEinsum(qibo_circ, dtype=datatype)
+    return contract(*myconvertor.state_vector_operands())
+
+    '''myconvertor = QiboCircuitToEinsum(qibo_circ, dtype=datatype)
     return contract(
         *myconvertor.expectation_operands(
             pauli_string_gen(qibo_circ.nqubits, pauli_string_pattern)
         )
-    )
+    )'''
 
-
-    # after this is the other level: how to optimize contraction
-
-    # temp
+    # after this is the other level: OPTIMIZATION USING CUQUANTUM 
 
         
 
