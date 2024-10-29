@@ -421,6 +421,7 @@ def pauli_string_gen(nqubits, pauli_string_pattern):
 
 def qaoa_execute(qibo_circ, datatype):
 
+
     myconvertor = QiboCircuitToEinsum(qibo_circ, dtype=datatype)
     return contract(*myconvertor.state_vector_operands())
 

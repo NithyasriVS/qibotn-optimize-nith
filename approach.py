@@ -72,6 +72,7 @@ initial_parameters = 0.01 * np.random.uniform(0,1,2)
 final_parameters = 0.03 * np.random.uniform(0,1,2)
 
 vqe_model = models.VQE(circuit, ham_cost)
+
 #loop which feeds back into minimize from qibotn side 
 #iteratively
 best_energy, final_parameters = vqe_model.minimize(initial_parameters)
