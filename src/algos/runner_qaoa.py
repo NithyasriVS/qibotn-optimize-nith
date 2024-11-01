@@ -22,10 +22,17 @@ computation_settings = {
     "QAOA_execute": {
         "ham_cost": cost_hamiltonian,
         "ham_mixer": mixer_hamiltonian,
-        "circ_depth": 5,
+        "nlayers": 5,
         "init_params": 0.01 * np.random.random(4),
         "dt": 0.1
     }
 }
 
 qibo.set_backend(backend="qibotn", platform="cutensornet", runcard=computation_settings)
+
+circuit = Circuit(nqubits)
+for i in range(0, nqubits):
+    circuit.add(gates.H(i))
+
+result = circuit()
+print(result.state())

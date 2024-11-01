@@ -25,6 +25,9 @@ params = 0.01 * np.random.random(nqubits)
 
 qaoa = models.QAOA(problem_hamiltonian, mixer=None)
 
+print()
+
+
 # iterative
 #params = optimize here
 
