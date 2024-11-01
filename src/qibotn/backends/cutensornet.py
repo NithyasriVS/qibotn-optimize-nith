@@ -27,6 +27,7 @@ class CuTensorNet(NumpyBackend):  # pragma: no cover
         if runcard is not None:
             self.MPI_enabled = runcard.get("MPI_enabled", False)
             self.NCCL_enabled = runcard.get("NCCL_enabled", False)
+            self.VQE_execute = runcard.get("VQE_execute")
 
             expectation_enabled_value = runcard.get("expectation_enabled")
             if expectation_enabled_value is True:
@@ -188,6 +189,10 @@ class CuTensorNet(NumpyBackend):  # pragma: no cover
             )
             if rank > 0:
                 state = np.array(0)
+        
+        if self.VQE_execute == True:
+            state = eval.dense_vector_tn_vqe(circuit, self.dtype)
+
         else:
             raise_error(NotImplementedError, "Compute type not supported.")
 

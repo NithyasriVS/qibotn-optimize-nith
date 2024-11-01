@@ -417,3 +417,8 @@ def pauli_string_gen(nqubits, pauli_string_pattern):
         char_to_add = pauli_string_pattern[i % len(pauli_string_pattern)]
         result += char_to_add
     return result
+
+def dense_vector_tn_vqe(qibo_circ, datatype):
+
+    myconvertor = QiboCircuitToEinsum(qibo_circ, dtype=datatype)
+    return contract(*myconvertor.state_vector_operands())
