@@ -120,7 +120,7 @@ class CuTensorNet(NumpyBackend):  # pragma: no cover
         Returns:
             QuantumState or numpy.ndarray: If `return_array` is False, returns a QuantumState object representing the quantum state. If `return_array` is True, returns a numpy array representing the quantum state.
         """
-
+        print("Entering qibotn execute circuit 1:")
         import qibotn.eval as eval
 
         if initial_state is not None:
@@ -132,6 +132,7 @@ class CuTensorNet(NumpyBackend):  # pragma: no cover
             and self.NCCL_enabled == False
             and self.expectation_enabled == False
         ):
+            print("Entering qibotn execute circuit 2:")
             state = eval.dense_vector_tn(circuit, self.dtype)
         elif (
             self.MPI_enabled == False
@@ -191,11 +192,32 @@ class CuTensorNet(NumpyBackend):  # pragma: no cover
                 state = np.array(0)
 
         if self.VQE_execute == True:
+            ''' Approach 1: VQE outside user does it
+            print("VQE is accessing execute_circuit within qibotn")
             state = eval.dense_vector_tn_vqe(circuit, self.dtype)
             print("pre ", type(state))
-            state = state.get()
-            print("post ", state)
+            state = QuantumState(state.get().flatten())
+            print("post ", state)'''
 
+            '''Approach 2: VQE inside: abstracted for user'''
+            from qibo import models, hamiltonians
+            ham = self.VQE_execute["hamiltonian"]
+            initial_parameters = self.VQE_execute["initial_parameters"]
+            if ham == "XXZ":
+                hamiltonian = hamiltonians.XXZ(circuit.nqubits)
+            if ham == "MaxCut":
+                hamiltonian = hamiltonians.MaxCut(circuit.nqubits)
+            if ham == "custom":
+                # find a way to construct a hamiltonian from a string given
+                # like "custom, " after the , the custom can be given in string and extracted by us
+                print("Not supported as of now")
+            
+            vqe = models.VQE(circuit, hamiltonian)
+            vqe.minimize(initial_parameters)
+
+            final_circ = vqe.circuit
+            state = eval.dense_vector_tn(final_circ)
+            
         else:
             raise_error(NotImplementedError, "Compute type not supported.")
 
