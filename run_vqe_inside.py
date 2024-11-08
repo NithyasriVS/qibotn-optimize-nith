@@ -4,8 +4,9 @@ from qibo.result import QuantumState
 from qibo import Circuit, gates, hamiltonians, models
 from qibo.symbols import Z
 import numpy as np
+import sys
 
-nqubits = 2
+nqubits = 4
 
 try:
     computation_settings = {
@@ -17,6 +18,12 @@ try:
     }
 
     qibo.set_backend(backend="qibotn", platform="cutensornet", runcard=computation_settings)
+    print("Printing callstack ")
+    sys.stdout.flush()
+    traceback.print_stack()
+    sys.stdout.flush()
+
+    # user gives hamiltonian in runcard and only has to get started with the ansatz
 
     c = Circuit(nqubits)
     for i in range(0, nqubits):
@@ -24,6 +31,8 @@ try:
 
     result = c()
     print(result.state())
+    print("Printing callstack ")
+    traceback.print_stack()
 
 except BaseException as e:
     print("An error occurred.")

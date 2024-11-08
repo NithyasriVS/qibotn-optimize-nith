@@ -67,6 +67,7 @@ class CuTensorNet(NumpyBackend):  # pragma: no cover
             self.MPS_enabled = False
             self.NCCL_enabled = False
             self.expectation_enabled = False
+            self.VQE_execute = False
 
         self.name = "qibotn"
         self.cuquantum = cuquantum
@@ -120,7 +121,7 @@ class CuTensorNet(NumpyBackend):  # pragma: no cover
         Returns:
             QuantumState or numpy.ndarray: If `return_array` is False, returns a QuantumState object representing the quantum state. If `return_array` is True, returns a numpy array representing the quantum state.
         """
-        print("Entering qibotn execute circuit 1:")
+        #print("Entering qibotn execute circuit")
         import qibotn.eval as eval
 
         if initial_state is not None:
@@ -131,8 +132,9 @@ class CuTensorNet(NumpyBackend):  # pragma: no cover
             and self.MPS_enabled == False
             and self.NCCL_enabled == False
             and self.expectation_enabled == False
+            and self.VQE_execute == False
         ):
-            print("Entering qibotn execute circuit 2:")
+            #print("Entering qibotn execute circuit 2:")
             state = eval.dense_vector_tn(circuit, self.dtype)
         elif (
             self.MPI_enabled == False
@@ -191,7 +193,9 @@ class CuTensorNet(NumpyBackend):  # pragma: no cover
             if rank > 0:
                 state = np.array(0)
 
-        if self.VQE_execute == True:
+        elif self.VQE_execute == True:
+            print("Entering VQE in execute_circuit of qibotn")
+            
             ''' Approach 1: VQE outside user does it
             print("VQE is accessing execute_circuit within qibotn")
             state = eval.dense_vector_tn_vqe(circuit, self.dtype)
@@ -199,17 +203,22 @@ class CuTensorNet(NumpyBackend):  # pragma: no cover
             state = QuantumState(state.get().flatten())
             print("post ", state)'''
 
+            
             '''Approach 2: VQE inside: abstracted for user'''
             from qibo import models, hamiltonians
+            
             ham = self.VQE_execute["hamiltonian"]
             initial_parameters = self.VQE_execute["initial_parameters"]
+            nqubits = circuit.nqubits
+            
             if ham == "XXZ":
-                hamiltonian = hamiltonians.XXZ(circuit.nqubits)
+                hamiltonian = hamiltonians.XXZ(nqubits)
             if ham == "MaxCut":
-                hamiltonian = hamiltonians.MaxCut(circuit.nqubits)
+                hamiltonian = hamiltonians.MaxCut(nqubits)
+            if ham == "X":
+                hamiltonian = hamiltonians.X(nqubits)
             if ham == "custom":
-                # find a way to construct a hamiltonian from a string given
-                # like "custom, " after the , the custom can be given in string and extracted by us
+                # need to find a way to construct a hamiltonian from a string given?
                 print("Not supported as of now")
             
             vqe = models.VQE(circuit, hamiltonian)
