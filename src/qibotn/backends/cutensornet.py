@@ -217,6 +217,12 @@ class CuTensorNet(NumpyBackend):  # pragma: no cover
                 hamiltonian = hamiltonians.MaxCut(nqubits)
             if ham == "X":
                 hamiltonian = hamiltonians.X(nqubits)
+            if ham == "Y":
+                hamiltonian = hamiltonians.Y(nqubits)
+            if ham == "Z":
+                hamiltonian = hamiltonians.Z(nqubits)
+            if ham == "TFIM":
+                hamiltonian = hamiltonians.TFIM(nqubits)
             if ham == "custom":
                 # need to find a way to construct a hamiltonian from a string given?
                 print("Not supported as of now")
