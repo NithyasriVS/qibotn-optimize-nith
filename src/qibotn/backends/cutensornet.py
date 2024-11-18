@@ -27,7 +27,6 @@ class CuTensorNet(NumpyBackend):  # pragma: no cover
         if runcard is not None:
             self.MPI_enabled = runcard.get("MPI_enabled", False)
             self.NCCL_enabled = runcard.get("NCCL_enabled", False)
-            self.VQE_execute = runcard.get("VQE_execute")
 
             expectation_enabled_value = runcard.get("expectation_enabled")
             if expectation_enabled_value is True:
@@ -61,6 +60,14 @@ class CuTensorNet(NumpyBackend):  # pragma: no cover
                 self.gate_algo = mps_enabled_value
             else:
                 raise TypeError("MPS_enabled has an unexpected type")
+            
+            VQE_execute = runcard.get("VQE_execute")
+            self.VQE_execute = runcard.get("VQE_execute")
+            if VQE_execute:
+                print("VQE is true")
+                self.hamiltonian = runcard.get("hamiltoninan")
+                self.initial_parameters = runcard.get("initial_parameters")
+
 
         else:
             self.MPI_enabled = False
@@ -133,8 +140,9 @@ class CuTensorNet(NumpyBackend):  # pragma: no cover
             and self.NCCL_enabled == False
             and self.expectation_enabled == False
             and self.VQE_execute == False
+            #and self.VQE_execute is False
         ):
-            #print("Entering qibotn execute circuit 2:")
+            print("Entering qibotn execute circuit")
             state = eval.dense_vector_tn(circuit, self.dtype)
         elif (
             self.MPI_enabled == False
@@ -193,7 +201,7 @@ class CuTensorNet(NumpyBackend):  # pragma: no cover
             if rank > 0:
                 state = np.array(0)
 
-        elif self.VQE_execute == True:
+        elif self.VQE_execute:
             print("Entering VQE in execute_circuit of qibotn")
             
             ''' Approach 1: VQE outside user does it
@@ -205,11 +213,15 @@ class CuTensorNet(NumpyBackend):  # pragma: no cover
 
             
             '''Approach 2: VQE inside: abstracted for user'''
-            from qibo import models, hamiltonians
+            from qibo import models, hamiltonians, gates, Circuit
             
-            ham = self.VQE_execute["hamiltonian"]
-            initial_parameters = self.VQE_execute["initial_parameters"]
-            nqubits = circuit.nqubits
+            nqubits = 4
+            circuit = Circuit(nqubits)
+            for i in range(0, nqubits):
+                circuit.add(gates.RX(i,0))
+
+            ham = self.hamiltonian
+            init_params = self.initial_parameters
             
             if ham == "XXZ":
                 hamiltonian = hamiltonians.XXZ(nqubits)
@@ -228,10 +240,11 @@ class CuTensorNet(NumpyBackend):  # pragma: no cover
                 print("Not supported as of now")
             
             vqe = models.VQE(circuit, hamiltonian)
-            vqe.minimize(initial_parameters)
+            vqe.minimize(init_params)
 
             final_circ = vqe.circuit
             state = eval.dense_vector_tn(final_circ)
+            print(QuantumState(state.flatten()))
             
         else:
             raise_error(NotImplementedError, "Compute type not supported.")

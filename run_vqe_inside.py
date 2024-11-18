@@ -8,34 +8,28 @@ import sys
 
 nqubits = 4
 
-try:
-    computation_settings = {
+#try:
+computation_settings = {
             "MPI_enabled": False,
             "MPS_enabled": False,
             "NCCL_enabled": False,
             "expectation_enabled": False,
             "VQE_execute": {"hamiltoninan": "XXZ", "initial_parameters": 0.01 * np.random.random(nqubits)}
-    }
+}
 
-    qibo.set_backend(backend="qibotn", platform="cutensornet", runcard=computation_settings)
-    print("Printing callstack ")
-    sys.stdout.flush()
-    traceback.print_stack()
-    sys.stdout.flush()
+qibo.set_backend(backend="qibotn", platform="cutensornet", runcard=computation_settings)
 
-    # user gives hamiltonian in runcard and only has to get started with the ansatz
-
+# user gives hamiltonian in runcard and only has to get started with the ansatz
+'''
     c = Circuit(nqubits)
     for i in range(0, nqubits):
         c.add(gates.RX(i,0))
 
     result = c()
     print(result.state())
-    print("Printing callstack ")
-    traceback.print_stack()
-
-except BaseException as e:
+'''
+'''except BaseException as e:
     print("An error occurred.")
     print("Error: ", e)
     print("\n Printing callstack ")
-    print(traceback.format_exc())
+    print(traceback.format_exc())'''
