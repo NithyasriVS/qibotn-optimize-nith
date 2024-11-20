@@ -36,8 +36,7 @@ class new_VQE:
             if compile:
                 loss = self.hamiltonian.backend.compile(loss_func)
             else:
-                #loss = loss_func
-                loss = vqe_loss_qibotn
+                loss = loss_func
 
             if method == "cma":
                 # TODO: check if we can use this shortcut
