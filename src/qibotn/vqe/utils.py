@@ -68,8 +68,6 @@ def construct_qubo(dist_matrix, ncust, nvehicle, vehicle_cap, cust_demands):
 
 def qubo2ham():
         print("need to write")
-
-
                         
 
 

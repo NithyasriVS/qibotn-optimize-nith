@@ -12,7 +12,7 @@ computation_settings = {
 
 qibo.set_backend(backend="qibotn", platform="cutensornet", runcard=computation_settings)
 
-nqubits = 2
+nqubits = 4
 c = Circuit(nqubits)
 for i in range(0, nqubits):
     c.add(gates.RX(i,0))
