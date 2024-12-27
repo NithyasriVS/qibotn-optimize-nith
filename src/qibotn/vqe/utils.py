@@ -63,7 +63,7 @@ def extract_vrp_data(f):
         
         return dist, ncust, nvehicles, cap, demands
 
-# Construct the QUBO based on the Distance Matrix
+'''# Construct the QUBO based on the Distance Matrix
 def construct_qubo(dist_matrix, ncust, nvehicle, vehicle_cap, cust_demands):
         print("need to write")
 
@@ -119,16 +119,17 @@ G.add_node(0, pos=(0, 0), demand=0)
 def distance(coord1, coord2):
         return abs(coord1[0] - coord2[0]) + abs(coord1[1] - coord2[1])
 
+# Edges b/w customers
 for i in range(ncust):
         for j in range(i + 1, ncust):
             dist = distance(cust_coords[i], cust_coords[j])
             G.add_edge(i + 1, j + 1, weight=dist)
     
-# Add edges from depot (node 0) to each customer
+# Edges from depot to each customer
 for i in range(ncust):
         dist = distance(depot, cust_coords[i])
         G.add_edge(0, i + 1, weight=dist)
-
+'''
 
 
 
