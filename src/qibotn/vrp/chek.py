@@ -110,3 +110,7 @@ initial_parameters=np.random.uniform(0, 2 * np.pi, 15)
 
 print(test_vqe.minimize(initial_parameters))
 
+measurements = test_vqe.circuit.execute(nshots=10)
+
+print(measurements)
+
