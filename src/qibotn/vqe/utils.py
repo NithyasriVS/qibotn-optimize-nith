@@ -1,6 +1,8 @@
 import numpy as np
 import itertools as iter
 import networkx as nx
+import qibo
+from qibo import Circuit
 
 # Loss function for Variational Quantum Eigensolver
 def vqe_loss_qibotn(p, c, h):
@@ -12,7 +14,28 @@ def vqe_loss_qibotn(p, c, h):
                 return h.expectation(final_state)
         return loss_return
 
-# Extract and Rerun the data for the Vehicle Routing Problem
+def vqe_loss_qibotn_2(p,c,h): # didn't help
+        def loss_return(p, c, h):
+                c.set_parameters(p)
+                result = h.backend.execute_circuit(c)
+                final_state = result.state()
+                final_state = final_state.get()
+                qibo.set_backend(backend="qibojit")
+                return h.expectation(final_state)
+        return loss_return
+
+def vqe_loss_qibotn_2(p,c,h): # didn't help
+        def loss_return(p, c, h):
+                c.set_parameters(p)
+                result = h.backend.execute_circuit(c)
+                final_state = result.state()
+                final_state = final_state.get()
+                qibo.set_backend(backend="qibojit")
+                return h.expectation(final_state)
+        return loss_return
+
+
+'''# Extract and Rerun the data for the Vehicle Routing Problem
 def extract_vrp_data(f):
         
         with open(f, 'r') as file:
@@ -63,8 +86,9 @@ def extract_vrp_data(f):
         
         return dist, ncust, nvehicles, cap, demands
 
-'''# Construct the QUBO based on the Distance Matrix
-def construct_qubo(dist_matrix, ncust, nvehicle, vehicle_cap, cust_demands):
+'''
+# Construct the QUBO based on the Distance Matrix
+'''def construct_qubo(dist_matrix, ncust, nvehicle, vehicle_cap, cust_demands):
         print("need to write")
 
 def qubo2ham():

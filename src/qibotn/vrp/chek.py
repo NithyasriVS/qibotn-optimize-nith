@@ -90,9 +90,11 @@ lin_qubo, quad_qubo = build_qubo(distance_matrix, ncust)
 #print("QUBO Linear Terms:", lin_qubo)
 #print("QUBO Quadratic Terms:", quad_qubo)
 
+# Covert QUBO to an ising model first
+
 h, J, _ = binary2spin(lin_qubo, quad_qubo)
-h = {k: -v for k, v in h.items()}
-J = {k: -v for k, v in J.items()}
+h = {k: -v for k, v in h.items()} # bias
+J = {k: -v for k, v in J.items()} # interaction
 
 ham = spin2QiboHamiltonian(h, J, dense=False)
 
@@ -103,7 +105,8 @@ ham_qub = ham.nqubits
 nqubits = 15
 c = Circuit(nqubits)
 for i in range(0, nqubits):
-    c.add(gates.RX(i,0))
+    #c.add(gates.RX(i,0))
+    c.add(gates.H(i))
 
 test_vqe = models.VQE(c, ham)
 initial_parameters=np.random.uniform(0, 2 * np.pi, ham_qub)

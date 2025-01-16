@@ -6,23 +6,6 @@ def binary2spin(
     quadratic: Dict[Tuple[int, int], float],
     offset: float = 0,
 ):
-    """Convert binary model to spin model
-
-        Please remember to put a negative sign to h and J after using this
-        function , if you are going to form a mamiltonian from the spin
-        model. Hamiltonians usually have a leading negative sign in them,
-        but QUBOs don't.
-
-    Args:
-        linear (dict): linear term of the binary model
-        quadratic (dict): quadratic term of the binary model
-        offset (float): offset of the binary model
-
-    Returns:
-        h (dict): bias of the spin model
-        J (dict): interaction of the spin model
-        offset (float): offset of the spin model
-    """
 
     h = {x: 0.5 * w for x, w in linear.items()}
 
@@ -44,22 +27,6 @@ def spin2binary(
     J: Dict[Tuple[int, int], float],
     offset: float = 0,
 ):
-    """Convert spin model to binary model
-
-        Please remember to put a negative sign to h and J before using this
-        function if you extract them from a hamiltonian.  Hamiltonians
-        usually have a leading negative sign in them, but QUBOs don't.
-
-    Args:
-        h (dict): bias of the spin model
-        J (dict): interaction of the spin model
-        offset (float): offset of the spin model
-
-    Returns:
-        linear (dict): linear term of the binary model
-        quadratic (dict): quadratic term of the binary model
-        offset (float): offset of the binary model
-    """
 
     linear = {s: 2.0 * bias for s, bias in h.items()}
 
