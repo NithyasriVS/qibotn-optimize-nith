@@ -105,8 +105,7 @@ ham_qub = ham.nqubits
 nqubits = 15
 c = Circuit(nqubits)
 for i in range(0, nqubits):
-    #c.add(gates.RX(i,0))
-    c.add(gates.H(i))
+    c.add(gates.RX(i,0))
 
 test_vqe = models.VQE(c, ham)
 initial_parameters=np.random.uniform(0, 2 * np.pi, ham_qub)
