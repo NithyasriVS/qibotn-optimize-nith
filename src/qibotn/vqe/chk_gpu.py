@@ -1,7 +1,22 @@
+import qibo
+from qibo import models, hamiltonians, Circuit, gates
+import numpy as np
+from vqe_tn import run_vqe
+
+computation_settings = {
+            "MPI_enabled": False,
+            "MPS_enabled": False,
+            "NCCL_enabled": False,
+            "expectation_enabled": False
+}
+
+qibo.set_backend(backend="qibotn", platform="cutensornet", runcard=computation_settings)
 from qubo_utils import binary2spin, spin2QiboHamiltonian
 import qibo
 from qibo import Circuit, models, gates
 import numpy as np
+
+qibo.set_backend(backend="qibotn", platform="cutensornet", runcard=computation_settings)
 
 ncust = 4
 
@@ -90,27 +105,27 @@ lin_qubo, quad_qubo = build_qubo(distance_matrix, ncust)
 #print("QUBO Linear Terms:", lin_qubo)
 #print("QUBO Quadratic Terms:", quad_qubo)
 
-h, J, _ = binary2spin(lin_qubo, quad_qubo)
+linear, quadratic = build_qubo(distance_matrix, ncust)
+
+h, J, _ = binary2spin(linear, quadratic)
 h = {k: -v for k, v in h.items()}
 J = {k: -v for k, v in J.items()}
 
 ham = spin2QiboHamiltonian(h, J, dense=False)
 
-print(ham, type(ham), ham.nqubits)
-ham_qub = ham.nqubits
-
+print(ham, type(ham))
 
 nqubits = 15
 c = Circuit(nqubits)
 for i in range(0, nqubits):
     c.add(gates.RX(i,0))
 
-test_vqe = models.VQE(c, ham)
-initial_parameters=np.random.uniform(0, 2 * np.pi, ham_qub)
+initial_parameters=np.random.uniform(0, 2 * np.pi, 15)
 
-print(test_vqe.minimize(initial_parameters))
+vqe_circuit = run_vqe(c, ham, initial_parameters)
+result = vqe_circuit()
+print(result.state())
 
-measurements = test_vqe.circuit.execute(nshots=10)
+measurements = vqe_circuit.circuit.execute(nshots=10)
 
 print(measurements)
-
