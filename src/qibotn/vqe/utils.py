@@ -14,6 +14,8 @@ def vqe_loss_qibotn(p, c, h):
                 return h.expectation(final_state)
         return loss_return
 
+# check data struct qibojit vs qibotn , also check optimizer
+
 def vqe_loss_qibotn_2(p,c,h): # didn't help
         def loss_return(p, c, h):
                 c.set_parameters(p)

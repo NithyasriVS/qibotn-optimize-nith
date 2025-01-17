@@ -174,7 +174,6 @@ lin_qubo, quad_qubo = build_qubo(distance_matrix, ncust)
 #print("QUBO Quadratic Terms:", quad_qubo)
 
 # Covert QUBO to an ising model first
-
 ''' Working example: Only 1 vehicle'''
 h, J, _ = binary2spin(lin_qubo, quad_qubo)
 h = {k: -v for k, v in h.items()} # bias
@@ -185,11 +184,14 @@ ham = spin2QiboHamiltonian(h, J, dense=False)
 print(ham, type(ham), ham.nqubits)
 ham_qub = ham.nqubits
 
-
-nqubits = 15
+nqubits = ham_qub
 c = Circuit(nqubits)
 for i in range(0, nqubits):
     c.add(gates.RX(i,0))
+# Entanglement missing
+# Hardware Efficient Ansatz (Generic) - nlayers, nqubits are inputs - tune nlayers
+
+    # Check qibojit annealing - design of ansatz
 
 test_vqe = models.VQE(c, ham)
 initial_parameters=np.random.uniform(0, 2 * np.pi, ham_qub)
@@ -199,6 +201,7 @@ print(test_vqe.minimize(initial_parameters))
 measurements = test_vqe.circuit.execute(nshots=10)
 
 print(measurements)
+# frequency highest = result
 
 
 # Let's try more complex case
