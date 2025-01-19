@@ -1,0 +1,127 @@
+from vrp_utils import binary2spin, spin2QiboHamiltonian, load_vrp, distance_matrix
+import qibo
+from qibo import Circuit, models, gates
+import numpy as np
+
+ncust = 4
+nvehicles = 1
+
+c = load_vrp("smallerdataset.txt")
+dm = distance_matrix(c)
+
+with open("vrpdata.txt", "w") as f:
+    f.write(str(nvehicles)+"\n\n"+str(dm))
+
+# Take actual data from file later, test with toy matrix first
+
+distance_matrix= [
+    [0.0, 9.849096, 8.29975427, 10.34143689, 5.27563503],
+    [9.849096, 0.0, 2.81998316, 0.71700279, 5.80897728],
+    [8.29975427, 2.81998316, 0.0, 2.81583664, 5.78378993],
+    [10.34143689, 0.71700279, 2.81583664, 0.0, 6.47844441],
+    [5.27563503, 5.80897728, 5.78378993, 6.47844441, 0.0]
+]
+
+'''distance_matrix = [
+    [0.0, 1.0, 2.0, 3.0],
+    [1.0, 0.0, 4.0, 5.0],
+    [2.0, 6.0, 0.0, 1.0],
+    [3.0, 4.0, 2.0, 0.0] 
+]'''
+
+def build_qubo(distance_matrix, ncust):
+    lin_qubo = {}
+    quad_qubo = {}
+
+    def find_ind(i, j, ncust): 
+        return i * ncust + j  # Flatten 2D to 1D
+
+    # Construct QUBO terms
+    for i in range(ncust):
+        for j in range(ncust):
+            if i != j:  # No self-loops
+                var_index = find_ind(i, j, ncust)
+                
+                if var_index not in lin_qubo:
+                    lin_qubo[var_index] = 0
+                lin_qubo[var_index] += distance_matrix[i][j]
+
+    penalty = 100  # Penalty for violating constraints
+
+    # Add constraints 
+    # Flow contstraint: Enter AND Exit a customer location and only once
+    for i in range(ncust):
+        for j in range(ncust):
+            if i != j:
+                for k in range(ncust):
+                    if k != j and k != i:
+                        var1, var2 = find_ind(i, j, ncust), find_ind(i, k, ncust)
+                        if var1 == var2:
+                            if var1 not in lin_qubo:
+                                lin_qubo[var1] = 0
+                            lin_qubo[var1] += penalty
+                        else:
+                            if (var1, var2) not in quad_qubo:
+                                quad_qubo[(var1, var2)] = 0
+                            quad_qubo[(var1, var2)] += penalty
+
+        # Each customer location entered exactly once
+        for j in range(ncust):
+            if i != j:
+                for k in range(ncust):
+                    if k != i and k != j:
+                        var1, var2 = find_ind(j, i, ncust), find_ind(k, i, ncust)
+                        if var1 == var2:
+                            if var1 not in lin_qubo:
+                                lin_qubo[var1] = 0
+                            lin_qubo[var1] += penalty
+                        else:
+                            if (var1, var2) not in quad_qubo:
+                                quad_qubo[(var1, var2)] = 0
+                            quad_qubo[(var1, var2)] += penalty
+
+    # Always start and end at depot
+    for j in range(1, ncust):
+        start_var = find_ind(0, j, ncust)
+        end_var = find_ind(j, 0, ncust)
+        if start_var not in lin_qubo:
+            lin_qubo[start_var] = 0
+        lin_qubo[start_var] += penalty
+        if end_var not in lin_qubo:
+            lin_qubo[end_var] = 0
+        lin_qubo[end_var] += penalty
+
+    return lin_qubo, quad_qubo
+
+# Generate the QUBO from the distance matrix
+lin_qubo, quad_qubo = build_qubo(distance_matrix, ncust)
+
+# Covert QUBO to an ising model first
+''' Working example: 1 vehicle'''
+h, J, _ = binary2spin(lin_qubo, quad_qubo)
+h = {k: -v for k, v in h.items()} # bias
+J = {k: -v for k, v in J.items()} # interaction
+
+ham = spin2QiboHamiltonian(h, J, dense=False)
+
+print(ham, type(ham), ham.nqubits)
+ham_qub = ham.nqubits
+
+nqubits = ham_qub
+c = Circuit(nqubits)
+for i in range(0, nqubits):
+    c.add(gates.RX(i,0))
+# Entanglement missing
+# Hardware Efficient Ansatz (Generic) - nlayers, nqubits are inputs - tune nlayers
+
+    # Check qibojit annealing - design of ansatz
+
+test_vqe = models.VQE(c, ham)
+initial_parameters=np.random.uniform(0, 2 * np.pi, ham_qub)
+
+print(test_vqe.minimize(initial_parameters))
+
+measurements = test_vqe.circuit.execute(nshots=10)
+
+print(measurements)
+# frequency highest = result
