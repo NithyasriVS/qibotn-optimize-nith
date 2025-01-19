@@ -42,7 +42,6 @@ def distance_matrix(coordinates):
             dist_matrix[j][i] = euc_2d
     return dist_matrix
 
-
 '''def vrp_graph(coords, distance_matrix):
     vrpG = nx.Graph
  
@@ -55,12 +54,10 @@ def distance_matrix(coordinates):
 
 c = load_vrp("smallerdataset.txt")
 dm = distance_matrix(c)
-#vg = vrp_graph(c, dm)
 
-x = [0,1,1,0,1,0,0,1,1,1]
-qubo = sum(x*w for x,w in zip(x, dm))
-
-print(dm, type(dm))
+nvehicles = 1
+with open("vdist.dat", "w") as f:
+    f.write(str(nvehicles)+"\n\n"+str(dm))
 
 
 
