@@ -24,8 +24,7 @@ def binary2spin(
 
 def spin2binary(
     h: Dict[int, float],
-    J: Dict[Tuple[int, int], float],
-    offset: float = 0,
+    J: Dict[Tuple[int, int], float]
 ):
 
     linear = {s: 2.0 * bias for s, bias in h.items()}
@@ -37,10 +36,7 @@ def spin2binary(
         linear[t] -= 2.0 * bias
     quadratic = dict(quadratic)
 
-    offset -= sum(linear.values())
-    offset += sum(quadratic.values())
-
-    return linear, quadratic, offset
+    return linear, quadratic
 
 
 def spin2QiboHamiltonian(
