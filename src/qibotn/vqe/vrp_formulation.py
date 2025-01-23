@@ -128,6 +128,10 @@ vqe_circuit = run_vqe(c, ham, initial_parameters)
 result = vqe_circuit()
 print(result.state())
 
+measurements = vqe_circuit(nshots=10)
+
+print(measurements)
+
 '''CPU Qibojit
 test_vqe = models.VQE(c, ham)
 initial_parameters=np.random.uniform(0, 2 * np.pi, nqubits)
