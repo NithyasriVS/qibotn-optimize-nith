@@ -122,6 +122,18 @@ for i in range(0, nqubits):
 
 initial_parameters=np.random.uniform(0, 2 * np.pi, 15)
 
+'''trial code'''
+hamil = hamiltonians.XXZ(15)
+
+vqe_circuit = run_vqe(c, hamil, initial_parameters)
+result = vqe_circuit()
+print(result.state())
+
+measurements = vqe_circuit.circuit.execute(nshots=10)
+
+print(measurements)
+
+'''Correct code
 vqe_circuit = run_vqe(c, ham, initial_parameters)
 result = vqe_circuit()
 print(result.state())
@@ -129,3 +141,4 @@ print(result.state())
 measurements = vqe_circuit.circuit.execute(nshots=10)
 
 print(measurements)
+'''
