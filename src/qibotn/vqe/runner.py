@@ -24,3 +24,7 @@ ham = hamiltonians.XXZ(nqubits)
 vqe_circuit = run_vqe(c, ham, initial_parameters)
 result = vqe_circuit()
 print(result.state())
+
+measurements = result.execute(nshots=10)
+
+print(measurements)

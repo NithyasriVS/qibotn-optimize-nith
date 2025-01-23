@@ -2,6 +2,7 @@ from vrp_utils import binary2spin, spin2QiboHamiltonian, load_vrp, distance_matr
 import qibo
 from qibo import Circuit, models, gates
 import numpy as np
+from vqe_tn import run_vqe
 
 ncust = 4
 nvehicles = 1
@@ -116,14 +117,18 @@ for i in range(0, nqubits):
     # Check qibojit annealing - design of ansatz
 
 '''Hardware Efficient Ansatz'''
-numlayers = 2
+'''numlayers = 2
 for _ in range(0,numlayers):
     for i in range(0,nqubits):
         c.add(gates.RY(i,0))
-    c.add(gates.CNOT(0, nqubits-1))
+    c.add(gates.CNOT(0, nqubits-1))'''
+initial_parameters=np.random.uniform(0, 2 * np.pi, nqubits)
 
+vqe_circuit = run_vqe(c, ham, initial_parameters)
+result = vqe_circuit()
+print(result.state())
 
-
+'''CPU Qibojit
 test_vqe = models.VQE(c, ham)
 initial_parameters=np.random.uniform(0, 2 * np.pi, nqubits)
 
@@ -132,4 +137,5 @@ print(test_vqe.minimize(initial_parameters))
 measurements = test_vqe.circuit.execute(nshots=10)
 
 print(measurements)
+'''
 # frequency highest = result
