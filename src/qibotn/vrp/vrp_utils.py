@@ -43,7 +43,6 @@ from typing import Dict, Tuple
 def binary2spin(
     linear: Dict[int, float],
     quadratic: Dict[Tuple[int, int], float],
-    offset: float = 0,
 ):
     """Convert binary QUBO model to Ising model
     """

@@ -6,11 +6,11 @@ import numpy as np
 ncust = 4
 nvehicles = 1
 
-c = load_vrp("smallerdataset.txt")
+'''c = load_vrp("smallerdataset.txt")
 dm = distance_matrix(c)
 
 with open("vrpdata.txt", "w") as f:
-    f.write(str(nvehicles)+"\n\n"+str(dm))
+    f.write(str(nvehicles)+"\n\n"+str(dm))'''
 
 # Take actual data from file later, test with toy matrix first
 
@@ -98,16 +98,15 @@ lin_qubo, quad_qubo = build_qubo(distance_matrix, ncust)
 
 # Covert QUBO to an ising model first
 ''' Working example: 1 vehicle'''
-h, J, _ = binary2spin(lin_qubo, quad_qubo)
+h, J = binary2spin(lin_qubo, quad_qubo)
 h = {k: -v for k, v in h.items()} # bias
 J = {k: -v for k, v in J.items()} # interaction
 
 ham = spin2QiboHamiltonian(h, J, dense=False)
 
 print(ham, type(ham), ham.nqubits)
-ham_qub = ham.nqubits
+nqubits = ham.nqubits
 
-nqubits = ham_qub
 c = Circuit(nqubits)
 for i in range(0, nqubits):
     c.add(gates.RX(i,0))
@@ -116,8 +115,17 @@ for i in range(0, nqubits):
 
     # Check qibojit annealing - design of ansatz
 
+'''Hardware Efficient Ansatz'''
+numlayers = 2
+for _ in range(0,numlayers):
+    for i in range(0,nqubits):
+        c.add(gates.RY(i,0))
+    c.add(gates.CNOT(0, nqubits-1))
+
+
+
 test_vqe = models.VQE(c, ham)
-initial_parameters=np.random.uniform(0, 2 * np.pi, ham_qub)
+initial_parameters=np.random.uniform(0, 2 * np.pi, nqubits)
 
 print(test_vqe.minimize(initial_parameters))
 
