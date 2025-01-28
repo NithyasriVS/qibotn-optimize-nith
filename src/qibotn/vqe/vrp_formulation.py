@@ -108,9 +108,16 @@ ham = spin2QiboHamiltonian(h, J, dense=False)
 print(ham, type(ham), ham.nqubits)
 nqubits = ham.nqubits
 
+'''
 c = Circuit(nqubits)
 for i in range(0, nqubits):
-    c.add(gates.RX(i,0))
+    c.add(gates.RX(i,0))'''
+
+# Using BOOSTVQE library to construct a hardware efficient ansatz
+from boostvqe.ansatze import hdw_efficient
+
+c = hdw_efficient(nqubits=nqubits, nlayers=1)
+
 # Entanglement missing
 # Hardware Efficient Ansatz (Generic) - nlayers, nqubits are inputs - tune nlayers
 
@@ -122,7 +129,7 @@ for _ in range(0,numlayers):
     for i in range(0,nqubits):
         c.add(gates.RY(i,0))
     c.add(gates.CNOT(0, nqubits-1))'''
-initial_parameters=np.random.uniform(0, 2 * np.pi, nqubits)
+initial_parameters=np.random.uniform(0, 2 * np.pi, nqubits*5)
 
 vqe_circuit = run_vqe(c, ham, initial_parameters)
 result = vqe_circuit()
