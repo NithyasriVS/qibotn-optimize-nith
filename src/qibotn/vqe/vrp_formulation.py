@@ -3,18 +3,21 @@ import qibo
 from qibo import Circuit, models, gates
 import numpy as np
 from vqe_tn import run_vqe
+from vrp_utils import extract_data
 
-ncust = 4
-nvehicles = 1
+'''
+filename = "data1.txt" # 5 vehicles
+#filename = "data2.txt" # 4 vehicles
+#filename = "data3.txt" # 3 vehicles
+#filename = "data4.txt" # 6 vehicles
+#filename = "data5.txt" #  10 vehicles
 
-'''c = load_vrp("smallerdataset.txt")
-dm = distance_matrix(c)
-
-with open("vrpdata.txt", "w") as f:
-    f.write(str(nvehicles)+"\n\n"+str(dm))'''
+ncust, dm = extract_data(filename)
+'''
 
 # Take actual data from file later, test with toy matrix first
 
+'''ncust = 5
 distance_matrix= [
     [0.0, 9.849096, 8.29975427, 10.34143689, 5.27563503],
     [9.849096, 0.0, 2.81998316, 0.71700279, 5.80897728],
@@ -22,13 +25,9 @@ distance_matrix= [
     [10.34143689, 0.71700279, 2.81583664, 0.0, 6.47844441],
     [5.27563503, 5.80897728, 5.78378993, 6.47844441, 0.0]
 ]
+'''
 
-'''distance_matrix = [
-    [0.0, 1.0, 2.0, 3.0],
-    [1.0, 0.0, 4.0, 5.0],
-    [2.0, 6.0, 0.0, 1.0],
-    [3.0, 4.0, 2.0, 0.0] 
-]'''
+#distance_matrix = dm
 
 def build_qubo(distance_matrix, ncust):
     lin_qubo = {}

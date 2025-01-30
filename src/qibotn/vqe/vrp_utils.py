@@ -35,8 +35,14 @@ def distance_matrix(coordinates):
             euc_2d = np.linalg.norm(np.array(coordinates[i]) - np.array(coordinates[j]))
             dist_matrix[i][j] = euc_2d
             dist_matrix[j][i] = euc_2d
-    return dist_matrix
+    return ncustomers, dist_matrix
 
+def extract_data(filename):
+    nvehicles=1
+    coords = load_vrp(filename)
+    ncust, dm = distance_matrix(coords)
+    return ncust, dm
+    
 from typing import Dict, Tuple
 
 # Inspired and reused from Qibo QAP Application
