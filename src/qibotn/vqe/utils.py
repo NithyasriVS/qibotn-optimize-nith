@@ -1,4 +1,5 @@
 # Loss function for Variational Quantum Eigensolver
+
 def vqe_loss_qibotn(p, c, h):
         def loss_return(p, c, h):
                 c.set_parameters(p)
