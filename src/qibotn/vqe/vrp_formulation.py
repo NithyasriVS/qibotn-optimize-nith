@@ -16,8 +16,8 @@ ncust, dm = extract_data(filename)
 
 
 # Take actual data from file later, test with toy matrix first
-
-'''ncust = 5
+'''
+ncust = 5
 distance_matrix= [
     [0.0, 9.849096, 8.29975427, 10.34143689, 5.27563503],
     [9.849096, 0.0, 2.81998316, 0.71700279, 5.80897728],
@@ -25,11 +25,10 @@ distance_matrix= [
     [10.34143689, 0.71700279, 2.81583664, 0.0, 6.47844441],
     [5.27563503, 5.80897728, 5.78378993, 6.47844441, 0.0]
 ]
+
+distance_matrix = dm
 '''
-
-#distance_matrix = dm
-
-def build_qubo(distance_matrix, ncust):
+def build_qubo(distance_mat, ncust):
     lin_qubo = {}
     quad_qubo = {}
 
@@ -44,7 +43,7 @@ def build_qubo(distance_matrix, ncust):
                 
                 if var_index not in lin_qubo:
                     lin_qubo[var_index] = 0
-                lin_qubo[var_index] += distance_matrix[i][j]
+                lin_qubo[var_index] += distance_mat[i][j]
 
     penalty = 100  # Penalty for violating constraints
 
@@ -94,7 +93,7 @@ def build_qubo(distance_matrix, ncust):
     return lin_qubo, quad_qubo
 
 # Generate the QUBO from the distance matrix
-lin_qubo, quad_qubo = build_qubo(distance_matrix, ncust)
+lin_qubo, quad_qubo = build_qubo(dm, ncust)
 
 # Covert QUBO to an ising model first
 ''' Working example: 1 vehicle'''
@@ -130,9 +129,15 @@ for _ in range(0,numlayers):
     c.add(gates.CNOT(0, nqubits-1))'''
 initial_parameters=np.random.uniform(0, 2 * np.pi, nqubits*5)
 
+circ_temp = c
+circ_temp.set_parameters(initial_parameters)
+initial_state = circ_temp().state()
+
 vqe_circuit = run_vqe(c, ham, initial_parameters)
 result = vqe_circuit()
 print(result.state())
+
+final_state = result.state()
 
 measurements = vqe_circuit(nshots=10)
 

@@ -2,6 +2,7 @@ import qibo
 from qibo import models, hamiltonians, Circuit, gates
 import numpy as np
 from vqe_tn import run_vqe
+from utils import plot_minimize
 
 computation_settings = {
             "MPI_enabled": False,
