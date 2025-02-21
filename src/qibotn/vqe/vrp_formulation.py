@@ -4,22 +4,16 @@ from qibo import Circuit, models, gates
 import numpy as np
 from vqe_tn import run_vqe
 from vrp_utils import extract_data
+from utils import plot_result
 
-#filename = "/home/FYP/nithyasr001/qibotn-optimize-nith/src/qibotn/vqe/data1.txt" # 5 vehicles works
-#filename = "/home/FYP/nithyasr001/qibotn-optimize-nith/src/qibotn/vqe/data2.txt" # 4 vehicles works
-#filename = "/home/FYP/nithyasr001/qibotn-optimize-nith/src/qibotn/vqe/data3.txt" # 3 vehicles works
-filename = "/home/FYP/nithyasr001/qibotn-optimize-nith/src/qibotn/vqe/data4.txt" # 6 vehicles
-ncust, dm = extract_data(filename)
-
-'''
-
+#filename = "data1.txt" # 5 vehicles
 #filename = "data2.txt" # 4 vehicles
-#filename = "data3.txt" # 3 vehicles
+filename = "data3.txt" # 3 vehicles
 #filename = "data4.txt" # 6 vehicles
 #filename = "data5.txt" #  10 vehicles
 
+ncust, dm = extract_data(filename)
 
-'''
 
 # Take actual data from file later, test with toy matrix first
 '''
@@ -149,8 +143,7 @@ measurements = vqe_circuit(nshots=10)
 
 print(measurements)
 
-print("Initial Expectation Value ", ham.expectation(initial_state))
-print("Final Expectation Value", ham.expectation(final_state))
+print(plot_result())
 
 '''CPU Qibojit
 test_vqe = models.VQE(c, ham)
