@@ -4,16 +4,16 @@ from qibo import Circuit, models, gates
 import numpy as np
 from vqe_tn import run_vqe
 from vrp_utils import extract_data
+from utils import plot_result
 
-'''
-filename = "data1.txt" # 5 vehicles
+#filename = "data1.txt" # 5 vehicles
 #filename = "data2.txt" # 4 vehicles
-#filename = "data3.txt" # 3 vehicles
+filename = "data3.txt" # 3 vehicles
 #filename = "data4.txt" # 6 vehicles
 #filename = "data5.txt" #  10 vehicles
 
 ncust, dm = extract_data(filename)
-'''
+
 
 # Take actual data from file later, test with toy matrix first
 
@@ -137,6 +137,8 @@ print(result.state())
 measurements = vqe_circuit(nshots=10)
 
 print(measurements)
+
+print(plot_result)
 
 '''CPU Qibojit
 test_vqe = models.VQE(c, ham)
