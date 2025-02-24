@@ -4,12 +4,12 @@ from qibo import Circuit, models, gates
 import numpy as np
 from vqe_tn import run_vqe
 from vrp_utils import extract_data
-from utils import plot_result
+from utils import plot_result, calc_final_measurement
 
 #filename = "data1.txt" # 5 vehicles
 #filename = "data2.txt" # 4 vehicles
-filename = "data3.txt" # 3 vehicles
-#filename = "data4.txt" # 6 vehicles
+#filename = "data3.txt" # 3 vehicles
+filename = "data4.txt" # 6 vehicles
 #filename = "data5.txt" #  10 vehicles
 
 ncust, dm = extract_data(filename)
@@ -103,7 +103,7 @@ J = {k: -v for k, v in J.items()} # interaction
 
 ham = spin2QiboHamiltonian(h, J, dense=False)
 
-print(ham, type(ham), ham.nqubits)
+print("Number of Qubits: ",ham.nqubits,"\n")
 nqubits = ham.nqubits
 
 '''
@@ -129,21 +129,50 @@ for _ in range(0,numlayers):
     c.add(gates.CNOT(0, nqubits-1))'''
 initial_parameters=np.random.uniform(0, 2 * np.pi, nqubits*5)
 
+# .state() try to set qibotn backend before that or use qibotn .state() - > this part look into 
 circ_temp = c
 circ_temp.set_parameters(initial_parameters)
 initial_state = circ_temp().state()
 
 vqe_circuit = run_vqe(c, ham, initial_parameters)
 result = vqe_circuit()
-print(result.state())
+#print(result.state())
 
 final_state = result.state()
 
-measurements = vqe_circuit(nshots=10)
+#not needed measurements = vqe_circuit(nshots=10)
+measurements = vqe_circuit(nshots=1000)
 
-print(measurements)
+print("Measurements: ", measurements)
 
-print(plot_result())
+bitstr = str(measurements)
+print("Final measurement output: ",calc_final_measurement(bitstr))
+
+#output = measurements.state()
+#print("Final measurement result: ",output,"\n")
+
+plot_result()
+
+'''print("Prob",measurements.probabilities())
+
+p = measurements.probabilities()
+p_max_n = np.argmax(p)
+max_prob = p[p_max_n]
+output = measurements.state()
+output = output[p_max_n]
+print("Final measurement result: ",output,"\n")
+'''
+'''
+freq = measurements.frequencies(binary=True)
+max_freq = max(freq, key=freq.get)
+print("Most common result: ",max_freq,"\n")
+'''
+
+
+print("Expectation Value of Initial State: ", ham.expectation(initial_state),"\n")
+print("Expectation Value of Final State: ", ham.expectation(final_state))
+
+#print(measurements)
 
 '''CPU Qibojit
 test_vqe = models.VQE(c, ham)
