@@ -5,14 +5,16 @@ import numpy as np
 from vqe_tn import run_vqe
 from vrp_utils import extract_data
 from utils import plot_result, calc_final_measurement
+#from qibotn.backends import cutensornet.execute_circuit as qibotn_measure
 
 #filename = "data1.txt" # 5 vehicles
 #filename = "data2.txt" # 4 vehicles
-filename = "data3.txt" # 3 vehicles
-#filename = "data4.txt" # 6 vehicles
+#filename = "data3.txt" # 3 vehicles
+filename = "data4.txt" # 6 vehicles
 #filename = "data5.txt" #  10 vehicles
 
 ncust, dm = extract_data(filename)
+
 
 # Take actual data from file later, test with toy matrix first
 '''
@@ -100,6 +102,15 @@ h, J = binary2spin(lin_qubo, quad_qubo)
 h = {k: -v for k, v in h.items()} # bias
 J = {k: -v for k, v in J.items()} # interaction
 
+computation_settings = {
+            "MPI_enabled": False,
+            "MPS_enabled": False,
+            "NCCL_enabled": False,
+            "expectation_enabled": False
+}
+
+qibo.set_backend(backend="qibotn", platform="cutensornet", runcard=computation_settings)
+
 ham = spin2QiboHamiltonian(h, J, dense=False)
 
 print("Number of Qubits: ",ham.nqubits,"\n")
@@ -131,13 +142,13 @@ initial_parameters=np.random.uniform(0, 2 * np.pi, nqubits*5)
 # .state() try to set qibotn backend before that or use qibotn .state() - > this part look into 
 circ_temp = c
 circ_temp.set_parameters(initial_parameters)
-initial_state = circ_temp().state()
+#initial_state = circ_temp().state()
 
 vqe_circuit = run_vqe(c, ham, initial_parameters)
 result = vqe_circuit()
 #print(result.state())
 
-final_state = result.state()
+#final_state = result.state()
 
 #not needed measurements = vqe_circuit(nshots=10)
 measurements = vqe_circuit(nshots=1000)
@@ -167,8 +178,9 @@ max_freq = max(freq, key=freq.get)
 print("Most common result: ",max_freq,"\n")
 '''
 
-print("Expectation Value of Initial State: ", ham.expectation(initial_state),"\n")
-print("Expectation Value of Final State: ", ham.expectation(final_state))
+
+#print("Expectation Value of Initial State: ", ham.expectation(initial_state),"\n")
+#print("Expectation Value of Final State: ", ham.expectation(final_state))
 
 #print(measurements)
 
